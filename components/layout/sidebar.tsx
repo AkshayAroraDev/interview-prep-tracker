@@ -1,0 +1,172 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { GraduationCap, LayoutDashboard, Plus, RotateCcw } from "lucide-react";
+import { useState } from "react";
+
+import { useTracker } from "@/components/providers/tracker-provider";
+import { TechnologyFormDialog } from "@/components/technology/technology-form-dialog";
+import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { getTechnologyProgress } from "@/lib/progress";
+import { cn } from "@/lib/utils";
+
+interface SidebarProps {
+  onNavigate?: () => void;
+  className?: string;
+}
+
+export function Sidebar({ onNavigate, className }: SidebarProps) {
+  const pathname = usePathname();
+  const { state, isHydrated, resetToSeed } = useTracker();
+  const [createOpen, setCreateOpen] = useState(false);
+  const [resetOpen, setResetOpen] = useState(false);
+
+  const isOverview = pathname === "/";
+
+  return (
+    <aside
+      className={cn(
+        "flex h-full w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground",
+        className,
+      )}
+    >
+      <div className="flex items-center gap-2.5 px-4 py-5">
+        <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+          <GraduationCap className="size-4" />
+        </div>
+        <div className="min-w-0">
+          <p className="truncate text-sm font-semibold tracking-tight">Prep Tracker</p>
+          <p className="truncate text-xs text-muted-foreground">Interview study</p>
+        </div>
+      </div>
+
+      <Separator className="bg-sidebar-border" />
+
+      <ScrollArea className="flex-1 px-2 py-3">
+        <nav className="space-y-1">
+          <SidebarLink
+            href="/"
+            active={isOverview}
+            icon={LayoutDashboard}
+            label="Overview"
+            onNavigate={onNavigate}
+          />
+
+          <p className="px-2 pb-1 pt-4 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+            Technologies
+          </p>
+
+          {!isHydrated ? (
+            <div className="space-y-1 px-1">
+              {Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="h-10 animate-pulse rounded-md bg-sidebar-accent/60"
+                />
+              ))}
+            </div>
+          ) : state.technologies.length === 0 ? (
+            <p className="px-2 py-2 text-xs text-muted-foreground">
+              No technologies yet. Add one to get started.
+            </p>
+          ) : (
+            state.technologies.map((technology) => {
+              const href = `/technology/${technology.id}`;
+              const active = pathname === href;
+              const progress = getTechnologyProgress(technology);
+
+              return (
+                <Link
+                  key={technology.id}
+                  href={href}
+                  onClick={onNavigate}
+                  className={cn(
+                    "group flex items-center gap-2.5 rounded-md px-2 py-2 text-sm transition-colors duration-150",
+                    active
+                      ? "bg-sidebar-accent text-sidebar-accent-foreground"
+                      : "text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
+                  )}
+                >
+                  <span
+                    className="size-2 shrink-0 rounded-full"
+                    style={{ backgroundColor: technology.color }}
+                  />
+                  <span className="min-w-0 flex-1 truncate font-medium">
+                    {technology.name}
+                  </span>
+                  <span className="text-xs tabular-nums text-muted-foreground">
+                    {progress.percentage}%
+                  </span>
+                </Link>
+              );
+            })
+          )}
+        </nav>
+      </ScrollArea>
+
+      <div className="space-y-2 border-t border-sidebar-border p-3">
+        <Button
+          className="w-full justify-start"
+          size="sm"
+          onClick={() => setCreateOpen(true)}
+        >
+          <Plus className="size-4" />
+          Add technology
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full justify-start text-muted-foreground"
+          onClick={() => setResetOpen(true)}
+        >
+          <RotateCcw className="size-4" />
+          Reset demo data
+        </Button>
+      </div>
+
+      <TechnologyFormDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <ConfirmDialog
+        open={resetOpen}
+        onOpenChange={setResetOpen}
+        title="Reset to demo data?"
+        description="This replaces all technologies, sections, and topics with the default seed data."
+        confirmLabel="Reset"
+        onConfirm={resetToSeed}
+      />
+    </aside>
+  );
+}
+
+function SidebarLink({
+  href,
+  active,
+  icon: Icon,
+  label,
+  onNavigate,
+}: {
+  href: string;
+  active: boolean;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  onNavigate?: () => void;
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onNavigate}
+      className={cn(
+        "flex items-center gap-2.5 rounded-md px-2 py-2 text-sm transition-colors duration-150",
+        active
+          ? "bg-sidebar-accent text-sidebar-accent-foreground"
+          : "text-sidebar-foreground/80 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
+      )}
+    >
+      <Icon className="size-4 shrink-0 opacity-70" />
+      <span className="font-medium">{label}</span>
+    </Link>
+  );
+}
