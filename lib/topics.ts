@@ -149,6 +149,9 @@ export const TOPIC_CATALOG: ReadonlyArray<TechnologyTemplate> = [
           { title: "Standalone APIs" },
           { title: "NgModules" },
           { title: "CLI" },
+          { title: "Templates" },
+          { title: "Directives" },
+          { title: "Data Binding" },
         ],
       },
       {
@@ -231,6 +234,20 @@ export const TOPIC_CATALOG: ReadonlyArray<TechnologyTemplate> = [
           { title: "Error Handling" },
           { title: "Request Cancellation" },
           { title: "Retry Strategy" },
+        ],
+      },
+      {
+        title: "Authentication",
+        description: "Angular authentication and authorization basics",
+        topics: [
+          { title: "Authentication vs Authorization" },
+          { title: "JWT" },
+          { title: "OAuth 2.0" },
+          { title: "Access Tokens" },
+          { title: "Refresh Tokens" },
+          { title: "Route Guards for Auth" },
+          { title: "HTTP Interceptors for Tokens" },
+          { title: "Role-based Access Control" },
         ],
       },
       {
