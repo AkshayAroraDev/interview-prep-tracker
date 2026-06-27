@@ -9,7 +9,7 @@ interface TopicListProps {
 
 export function TopicList({ technologyId, sectionId, topics }: TopicListProps) {
   return (
-    <div className="divide-y divide-border/50 rounded-md border border-border/50 bg-background/50">
+    <div className="divide-y divide-border/60 rounded-xl border border-border/70 bg-background">
       {topics.map((topic) => (
         <TopicItem
           key={topic.id}

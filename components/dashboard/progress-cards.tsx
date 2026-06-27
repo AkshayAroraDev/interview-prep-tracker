@@ -27,11 +27,11 @@ export function ProgressCards({ technology }: ProgressCardsProps) {
 
   if (!isHydrated) {
     return (
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {Array.from({ length: 4 }).map((_, index) => (
           <div
             key={index}
-            className="h-[88px] animate-pulse rounded-lg border bg-muted/30"
+            className="h-[112px] animate-pulse rounded-xl border border-border/70 bg-muted/30"
           />
         ))}
       </div>
@@ -43,7 +43,7 @@ export function ProgressCards({ technology }: ProgressCardsProps) {
     : "Across all technologies";
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
       <StatCard
         label="Total Topics"
         value={stats.total}

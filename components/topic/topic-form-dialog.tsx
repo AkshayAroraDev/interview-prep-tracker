@@ -22,8 +22,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "@/lib/constants";
-import type { CreateTopicInput, Priority, Topic, TopicStatus } from "@/types";
+import {
+  CONFIDENCE_OPTIONS,
+  INTERVIEW_FREQUENCY_OPTIONS,
+  PRIORITY_OPTIONS,
+  STATUS_OPTIONS,
+} from "@/lib/constants";
+import type {
+  ConfidenceLevel,
+  CreateTopicInput,
+  InterviewFrequency,
+  Priority,
+  Topic,
+  TopicStatus,
+} from "@/types";
 
 interface TopicFormDialogProps {
   open: boolean;
@@ -48,6 +60,9 @@ export function TopicFormDialog({
   const [resources, setResources] = useState("");
   const [status, setStatus] = useState<TopicStatus>("not_started");
   const [priority, setPriority] = useState<Priority>("medium");
+  const [interviewFrequency, setInterviewFrequency] =
+    useState<InterviewFrequency>("occasional");
+  const [confidence, setConfidence] = useState<ConfidenceLevel>("medium");
 
   useEffect(() => {
     if (open) {
@@ -56,6 +71,8 @@ export function TopicFormDialog({
       setResources(topic?.resources?.join("\n") ?? "");
       setStatus(topic?.status ?? "not_started");
       setPriority(topic?.priority ?? "medium");
+      setInterviewFrequency(topic?.interviewFrequency ?? "occasional");
+      setConfidence(topic?.confidence ?? "medium");
     }
   }, [open, topic]);
 
@@ -72,6 +89,8 @@ export function TopicFormDialog({
         .filter(Boolean),
       status,
       priority,
+      interviewFrequency,
+      confidence,
     };
 
     if (isEditing && topic) {
@@ -133,6 +152,46 @@ export function TopicFormDialog({
                 </SelectTrigger>
                 <SelectContent>
                   {PRIORITY_OPTIONS.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label>Interview Frequency</Label>
+              <Select
+                value={interviewFrequency}
+                onValueChange={(value) => setInterviewFrequency(value as InterviewFrequency)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {INTERVIEW_FREQUENCY_OPTIONS.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Confidence</Label>
+              <Select
+                value={confidence}
+                onValueChange={(value) => setConfidence(value as ConfidenceLevel)}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {CONFIDENCE_OPTIONS.map((option) => (
                     <SelectItem key={option} value={option}>
                       {option}
                     </SelectItem>

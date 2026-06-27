@@ -17,11 +17,11 @@ export function SectionList({ technology }: SectionListProps) {
   const [createOpen, setCreateOpen] = useState(false);
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-5">
       <div className="flex items-center justify-between gap-3">
-        <div>
-          <h2 className="text-sm font-semibold tracking-tight">Sections</h2>
-          <p className="text-xs text-muted-foreground">
+        <div className="space-y-1">
+          <h2 className="text-base font-semibold tracking-tight">Sections</h2>
+          <p className="text-sm text-muted-foreground">
             Expand a section to review and update topics.
           </p>
         </div>

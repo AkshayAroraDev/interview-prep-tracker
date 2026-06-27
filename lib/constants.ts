@@ -1,4 +1,9 @@
-import type { Priority, TopicStatus } from "@/types";
+import type {
+  ConfidenceLevel,
+  InterviewFrequency,
+  Priority,
+  TopicStatus,
+} from "@/types";
 
 export const STORAGE_KEY = "interview-prep-tracker-v1";
 
@@ -39,3 +44,29 @@ export const STATUS_OPTIONS: TopicStatus[] = [
 ];
 
 export const PRIORITY_OPTIONS: Priority[] = ["low", "medium", "high"];
+
+export const INTERVIEW_FREQUENCY_OPTIONS: InterviewFrequency[] = [
+  "frequent",
+  "occasional",
+  "rare",
+];
+
+export const INTERVIEW_FREQUENCY_CONFIG: Record<InterviewFrequency, { label: string }> = {
+  frequent: { label: "Frequent" },
+  occasional: { label: "Occasional" },
+  rare: { label: "Rare" },
+};
+
+export const CONFIDENCE_OPTIONS: ConfidenceLevel[] = ["low", "medium", "high"];
+
+export const CONFIDENCE_CONFIG: Record<ConfidenceLevel, { label: string }> = {
+  low: { label: "Low" },
+  medium: { label: "Medium" },
+  high: { label: "High" },
+};
+
+export const DEFAULT_TOPIC_METADATA = {
+  interviewFrequency: "occasional",
+  confidence: "medium",
+  notes: "",
+} as const;

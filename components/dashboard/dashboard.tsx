@@ -14,30 +14,30 @@ export function Dashboard() {
   const { state, isHydrated } = useTracker();
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8 px-4 py-6 md:px-8 md:py-8">
-      <header className="space-y-1">
-        <h1 className="text-xl font-semibold tracking-tight md:text-2xl">Overview</h1>
-        <p className="text-sm text-muted-foreground">
+    <div className="mx-auto max-w-5xl space-y-10 px-4 py-7 md:px-8 md:py-10">
+      <header className="space-y-2">
+        <h1 className="text-2xl font-semibold tracking-tight md:text-[1.9rem]">Overview</h1>
+        <p className="max-w-2xl text-sm text-muted-foreground md:text-[0.95rem]">
           Your interview prep at a glance. Select a technology from the sidebar to dive in.
         </p>
       </header>
 
       <ProgressCards />
 
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-sm font-semibold tracking-tight">All technologies</h2>
-          <p className="text-xs text-muted-foreground">
+      <section className="space-y-5">
+        <div className="space-y-1">
+          <h2 className="text-base font-semibold tracking-tight">All technologies</h2>
+          <p className="text-sm text-muted-foreground">
             Quick snapshot of progress across each stack.
           </p>
         </div>
 
         {!isHydrated ? (
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2">
             {Array.from({ length: 3 }).map((_, index) => (
               <div
                 key={index}
-                className="h-32 animate-pulse rounded-lg border bg-muted/30"
+                className="h-36 animate-pulse rounded-xl border border-border/70 bg-muted/30"
               />
             ))}
           </div>
@@ -47,33 +47,37 @@ export function Dashboard() {
             description="Use the sidebar to add your first technology and start tracking topics."
           />
         ) : (
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-4 sm:grid-cols-2">
             {state.technologies.map((technology) => {
               const progress = getTechnologyProgress(technology);
 
               return (
-                <Link key={technology.id} href={`/technology/${technology.id}`}>
-                  <Card className="group h-full border-border/60 bg-card/50 shadow-none transition-all duration-150 hover:border-border hover:bg-card">
-                    <CardHeader className="pb-3">
+                <Link
+                  key={technology.id}
+                  href={`/technology/${technology.id}`}
+                  className="rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 focus-visible:ring-offset-2"
+                >
+                  <Card className="group h-full border-border/70 bg-card shadow-none transition-colors duration-150 hover:border-border hover:bg-card">
+                    <CardHeader className="pb-2">
                       <div className="flex items-start justify-between gap-3">
-                        <div className="flex items-center gap-2.5">
+                        <div className="flex items-center gap-3">
                           <span
-                            className="size-2.5 shrink-0 rounded-full"
+                            className="size-3 shrink-0 rounded-full"
                             style={{ backgroundColor: technology.color }}
                           />
-                          <CardTitle className="text-base font-medium">
+                          <CardTitle className="text-base font-semibold tracking-tight">
                             {technology.name}
                           </CardTitle>
                         </div>
-                        <ArrowRight className="size-4 text-muted-foreground transition-transform duration-150 group-hover:translate-x-0.5 group-hover:text-foreground" />
+                        <ArrowRight className="size-4 text-muted-foreground transition-colors duration-150 group-hover:text-foreground" />
                       </div>
                       {technology.description ? (
-                        <p className="line-clamp-2 text-xs text-muted-foreground">
+                        <p className="line-clamp-2 text-sm text-muted-foreground">
                           {technology.description}
                         </p>
                       ) : null}
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="pt-1">
                       <ProgressBar
                         value={progress.percentage}
                         label={`${progress.completed} of ${progress.total} topics`}

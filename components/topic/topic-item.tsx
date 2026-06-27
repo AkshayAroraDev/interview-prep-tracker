@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { ExternalLink, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
-import { useTracker } from "@/components/providers/tracker-provider";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { StatusBadge } from "@/components/topic/status-badge";
 import { TopicFormDialog } from "@/components/topic/topic-form-dialog";
@@ -17,9 +16,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { PRIORITY_CONFIG, STATUS_OPTIONS } from "@/lib/constants";
+import {
+  CONFIDENCE_CONFIG,
+  INTERVIEW_FREQUENCY_CONFIG,
+  PRIORITY_CONFIG,
+  PRIORITY_OPTIONS,
+  STATUS_OPTIONS,
+} from "@/lib/constants";
+import { useTopicItemActions } from "@/hooks/use-topic-item-actions";
 import { cn } from "@/lib/utils";
-import type { Priority, Topic } from "@/types";
+import type { Topic } from "@/types";
 
 interface TopicItemProps {
   technologyId: string;
@@ -28,43 +34,37 @@ interface TopicItemProps {
 }
 
 export function TopicItem({ technologyId, sectionId, topic }: TopicItemProps) {
-  const { updateTopicStatus, updateTopicPriority, deleteTopic } = useTracker();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const { hasDetails, isCompleted, toggleCompleted, setStatus, setPriority, removeTopic } =
+    useTopicItemActions({ technologyId, sectionId, topic });
 
   const priority = PRIORITY_CONFIG[topic.priority];
-  const hasDetails =
-    Boolean(topic.notes) || Boolean(topic.resources && topic.resources.length > 0);
-  const isCompleted = topic.status === "completed";
+  const frequency = INTERVIEW_FREQUENCY_CONFIG[topic.interviewFrequency];
+  const confidence = CONFIDENCE_CONFIG[topic.confidence];
+  const notePreview = topic.notes ? topic.notes.slice(0, 90) : "";
 
   return (
     <div
       className={cn(
-        "group rounded-md border border-transparent px-2 py-2 transition-colors duration-150",
+        "group rounded-lg border border-transparent px-2.5 py-2.5 transition-colors duration-150",
         "hover:border-border/60 hover:bg-muted/30",
       )}
     >
       <div className="flex items-start gap-3">
         <Checkbox
           checked={isCompleted}
-          onCheckedChange={(checked) =>
-            updateTopicStatus(
-              technologyId,
-              sectionId,
-              topic.id,
-              checked ? "completed" : "not_started",
-            )
-          }
+          onCheckedChange={toggleCompleted}
           aria-label={`Mark ${topic.title} as completed`}
-          className="mt-0.5"
+          className="mt-1"
         />
 
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <button
               type="button"
-              className="min-w-0 flex-1 text-left"
+              className="min-w-0 flex-1 rounded-md text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
               onClick={() => hasDetails && setExpanded((value) => !value)}
               disabled={!hasDetails}
             >
@@ -82,6 +82,17 @@ export function TopicItem({ technologyId, sectionId, topic }: TopicItemProps) {
                   {priority.label}
                 </Badge>
               </div>
+              <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground/90">
+                <Badge variant="secondary" className="font-normal">
+                  Frequency: {frequency.label}
+                </Badge>
+                <Badge variant="secondary" className="font-normal">
+                  Confidence: {confidence.label}
+                </Badge>
+                <span className="max-w-md truncate">
+                  Notes: {notePreview || "-"}
+                </span>
+              </div>
             </button>
 
             <DropdownMenu>
@@ -90,7 +101,7 @@ export function TopicItem({ technologyId, sectionId, topic }: TopicItemProps) {
                   <Button
                     variant="ghost"
                     size="icon-sm"
-                    className="opacity-0 transition-opacity duration-150 group-hover:opacity-100 data-open:opacity-100"
+                    className="opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100 data-open:opacity-100"
                     aria-label="Topic actions"
                   />
                 }
@@ -106,20 +117,16 @@ export function TopicItem({ technologyId, sectionId, topic }: TopicItemProps) {
                 {STATUS_OPTIONS.map((status) => (
                   <DropdownMenuItem
                     key={status}
-                    onClick={() =>
-                      updateTopicStatus(technologyId, sectionId, topic.id, status)
-                    }
+                    onClick={() => setStatus(status)}
                   >
                     Mark as {status.replaceAll("_", " ")}
                   </DropdownMenuItem>
                 ))}
                 <DropdownMenuSeparator />
-                {(["low", "medium", "high"] as Priority[]).map((level) => (
+                {PRIORITY_OPTIONS.map((level) => (
                   <DropdownMenuItem
                     key={level}
-                    onClick={() =>
-                      updateTopicPriority(technologyId, sectionId, topic.id, level)
-                    }
+                    onClick={() => setPriority(level)}
                   >
                     Priority: {level}
                   </DropdownMenuItem>
@@ -134,7 +141,7 @@ export function TopicItem({ technologyId, sectionId, topic }: TopicItemProps) {
           </div>
 
           {expanded && hasDetails ? (
-            <div className="mt-2 space-y-2 animate-in fade-in slide-in-from-top-1 duration-200">
+            <div className="mt-2 space-y-2 animate-in fade-in duration-150">
               {topic.notes ? (
                 <p className="text-xs leading-relaxed text-muted-foreground whitespace-pre-wrap">
                   {topic.notes}
@@ -175,7 +182,7 @@ export function TopicItem({ technologyId, sectionId, topic }: TopicItemProps) {
         onOpenChange={setDeleteOpen}
         title="Delete topic?"
         description="This topic will be removed from your tracker."
-        onConfirm={() => deleteTopic(technologyId, sectionId, topic.id)}
+        onConfirm={removeTopic}
       />
     </div>
   );

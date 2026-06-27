@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-import { STORAGE_KEY } from "@/lib/constants";
+import { DEFAULT_TOPIC_METADATA, STORAGE_KEY } from "@/lib/constants";
 import { generateId } from "@/lib/id";
 import { loadState, resetState, saveState } from "@/lib/storage";
 import type {
@@ -161,7 +161,10 @@ export function useInterviewTracker() {
       const topic: Topic = {
         id: generateId(),
         title: input.title.trim(),
-        notes: input.notes?.trim(),
+        interviewFrequency:
+          input.interviewFrequency ?? DEFAULT_TOPIC_METADATA.interviewFrequency,
+        confidence: input.confidence ?? DEFAULT_TOPIC_METADATA.confidence,
+        notes: input.notes?.trim() ?? DEFAULT_TOPIC_METADATA.notes,
         resources: input.resources?.filter(Boolean),
         status: input.status ?? "not_started",
         priority: input.priority ?? "medium",

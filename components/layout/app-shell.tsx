@@ -26,7 +26,7 @@ export function AppShell({ children }: AppShellProps) {
       <Sidebar className="hidden md:flex" />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-12 shrink-0 items-center justify-between border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
+        <header className="flex h-14 shrink-0 items-center justify-between border-b border-border/80 bg-background px-4 md:px-6">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger
               render={
@@ -54,7 +54,7 @@ export function AppShell({ children }: AppShellProps) {
         </header>
 
         <main className="flex-1 overflow-y-auto">
-          <div className="animate-in fade-in duration-300">{children}</div>
+          <div className="animate-in fade-in px-0 duration-200">{children}</div>
         </main>
       </div>
     </div>

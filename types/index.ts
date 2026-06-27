@@ -2,10 +2,16 @@ export type TopicStatus = "not_started" | "in_progress" | "completed" | "needs_r
 
 export type Priority = "low" | "medium" | "high";
 
+export type InterviewFrequency = "frequent" | "occasional" | "rare";
+
+export type ConfidenceLevel = "low" | "medium" | "high";
+
 export interface Topic {
   id: string;
   title: string;
-  notes?: string;
+  interviewFrequency: InterviewFrequency;
+  confidence: ConfidenceLevel;
+  notes: string;
   resources?: string[];
   status: TopicStatus;
   priority: Priority;
@@ -58,6 +64,8 @@ export interface CreateSectionInput {
 export interface CreateTopicInput {
   title: string;
   notes?: string;
+  interviewFrequency?: InterviewFrequency;
+  confidence?: ConfidenceLevel;
   resources?: string[];
   status?: TopicStatus;
   priority?: Priority;
@@ -66,7 +74,32 @@ export interface CreateTopicInput {
 export interface UpdateTopicInput {
   title?: string;
   notes?: string;
+  interviewFrequency?: InterviewFrequency;
+  confidence?: ConfidenceLevel;
   resources?: string[];
   status?: TopicStatus;
   priority?: Priority;
+}
+
+export interface TopicTemplate {
+  title: string;
+  status?: TopicStatus;
+  priority?: Priority;
+  interviewFrequency?: InterviewFrequency;
+  confidence?: ConfidenceLevel;
+  notes?: string;
+}
+
+export interface SectionTemplate {
+  title: string;
+  description?: string;
+  topics: TopicTemplate[];
+}
+
+export interface TechnologyTemplate {
+  name: string;
+  description?: string;
+  color: string;
+  icon?: string;
+  sections: SectionTemplate[];
 }

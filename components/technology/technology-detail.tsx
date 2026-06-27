@@ -26,8 +26,8 @@ export function TechnologyDetail({ technologyId }: TechnologyDetailProps) {
 
   if (!isHydrated) {
     return (
-      <div className="mx-auto max-w-5xl px-4 py-6 md:px-8 md:py-8">
-        <div className="h-48 animate-pulse rounded-lg border bg-muted/30" />
+      <div className="mx-auto max-w-5xl px-4 py-7 md:px-8 md:py-10">
+        <div className="h-52 animate-pulse rounded-xl border border-border/70 bg-muted/30" />
       </div>
     );
   }
@@ -40,20 +40,20 @@ export function TechnologyDetail({ technologyId }: TechnologyDetailProps) {
   const progress = getTechnologyProgress(technology);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8 px-4 py-6 md:px-8 md:py-8">
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2.5">
+    <div className="mx-auto max-w-5xl space-y-10 px-4 py-7 md:px-8 md:py-10">
+      <header className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+        <div className="space-y-2.5">
+          <div className="flex items-center gap-3">
             <span
-              className="size-3 shrink-0 rounded-full"
+              className="size-3.5 shrink-0 rounded-full"
               style={{ backgroundColor: technology.color }}
             />
-            <h1 className="text-xl font-semibold tracking-tight md:text-2xl">
+            <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
               {technology.name}
             </h1>
           </div>
           {technology.description ? (
-            <p className="max-w-2xl text-sm text-muted-foreground">
+            <p className="max-w-2xl text-sm text-muted-foreground md:text-[0.95rem]">
               {technology.description}
             </p>
           ) : null}
@@ -77,8 +77,8 @@ export function TechnologyDetail({ technologyId }: TechnologyDetailProps) {
 
       <ProgressCards technology={technology} />
 
-      <Card className="border-border/60 bg-card/50 shadow-none">
-        <CardContent className="p-4">
+      <Card className="border-border/70 bg-card shadow-none">
+        <CardContent className="p-5">
           <ProgressBar
             value={progress.percentage}
             label="Overall progress"

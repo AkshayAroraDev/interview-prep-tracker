@@ -36,7 +36,10 @@ export function SectionAccordion({ technology, sections }: SectionAccordionProps
   const defaultOpen = sections.map((section) => section.id);
 
   return (
-    <Accordion defaultValue={defaultOpen} className="rounded-lg border bg-card/40">
+    <Accordion
+      defaultValue={defaultOpen}
+      className="rounded-xl border border-border/70 bg-card p-1"
+    >
       {sections.map((section) => (
         <SectionAccordionItem
           key={section.id}
@@ -63,18 +66,18 @@ function SectionAccordionItem({
   const progress = getSectionProgress(section);
 
   return (
-    <AccordionItem value={section.id} className="border-border/60 px-4">
-      <div className="flex items-start gap-2 py-1">
-        <AccordionTrigger className="flex-1 py-3 hover:no-underline">
-          <div className="flex min-w-0 flex-1 flex-col gap-2 pr-4 text-left">
+    <AccordionItem value={section.id} className="rounded-lg border-border/70 px-3.5">
+      <div className="flex items-start gap-2 py-2">
+        <AccordionTrigger className="flex-1 py-3.5 hover:no-underline">
+          <div className="flex min-w-0 flex-1 flex-col gap-2.5 pr-4 text-left">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm font-medium">{section.title}</span>
-              <Badge variant="secondary" className="font-normal">
+              <span className="text-sm font-semibold tracking-tight">{section.title}</span>
+              <Badge variant="secondary" className="font-medium">
                 {progress.completed}/{progress.total}
               </Badge>
             </div>
             {section.description ? (
-              <p className="text-xs font-normal text-muted-foreground">
+              <p className="text-sm font-normal text-muted-foreground">
                 {section.description}
               </p>
             ) : null}
@@ -82,7 +85,7 @@ function SectionAccordionItem({
               value={progress.percentage}
               showValue={false}
               accentColor={technology.color}
-              className="max-w-xs"
+              className="max-w-sm"
             />
           </div>
         </AccordionTrigger>
@@ -93,7 +96,7 @@ function SectionAccordionItem({
               <Button
                 variant="ghost"
                 size="icon-sm"
-                className="mt-2 shrink-0"
+                className="mt-2 shrink-0 rounded-lg data-open:bg-muted"
                 aria-label="Section actions"
               />
             }

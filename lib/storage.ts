@@ -1,6 +1,28 @@
 import { seedData } from "@/data/seed";
-import { STORAGE_KEY } from "@/lib/constants";
+import { DEFAULT_TOPIC_METADATA, STORAGE_KEY } from "@/lib/constants";
 import type { TrackerState } from "@/types";
+
+function normalizeState(state: TrackerState): TrackerState {
+  const technologies = Array.isArray(state.technologies) ? state.technologies : [];
+
+  return {
+    technologies: technologies.map((technology) => ({
+      ...technology,
+      sections: (Array.isArray(technology.sections) ? technology.sections : []).map(
+        (section) => ({
+        ...section,
+        topics: (Array.isArray(section.topics) ? section.topics : []).map((topic) => ({
+          ...topic,
+          interviewFrequency:
+            topic.interviewFrequency ?? DEFAULT_TOPIC_METADATA.interviewFrequency,
+          confidence: topic.confidence ?? DEFAULT_TOPIC_METADATA.confidence,
+          notes: topic.notes ?? DEFAULT_TOPIC_METADATA.notes,
+        })),
+      }),
+      ),
+    })),
+  };
+}
 
 export function loadState(): TrackerState {
   if (typeof window === "undefined") {
@@ -18,7 +40,7 @@ export function loadState(): TrackerState {
       return structuredClone(seedData);
     }
 
-    return parsed;
+    return normalizeState(parsed);
   } catch {
     return structuredClone(seedData);
   }

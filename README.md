@@ -43,7 +43,7 @@ components/       # Reusable UI components
   ui/             # shadcn/ui primitives
 data/             # Seed data
 hooks/            # Custom React hooks
-lib/              # Storage, progress, constants
+lib/              # Storage, progress, constants, central topic catalog
 types/            # TypeScript interfaces
 ```
 

@@ -28,20 +28,27 @@ export function ProgressBar({
       }
     >
       {(label || showValue) && (
-        <div className="flex items-center justify-between text-sm">
-          {label ? <span className="text-muted-foreground">{label}</span> : <span />}
+        <div className="flex items-center justify-between gap-3 text-sm">
+          {label ? (
+            <span className="truncate text-[0.82rem] font-medium text-muted-foreground">
+              {label}
+            </span>
+          ) : (
+            <span />
+          )}
           {showValue ? (
-            <span className="font-medium tabular-nums">{clamped}%</span>
+            <span className="text-[0.82rem] font-semibold tabular-nums">{clamped}%</span>
           ) : null}
         </div>
       )}
       <Progress
         value={clamped}
-        className={
+        className={cn(
+          "[&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:rounded-full [&_[data-slot=progress-track]]:bg-muted/70 [&_[data-slot=progress-indicator]]:rounded-full [&_[data-slot=progress-indicator]]:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.15)]",
           accentColor
             ? "[&_[data-slot=progress-indicator]]:bg-[var(--progress-accent)]"
-            : undefined
-        }
+            : "[&_[data-slot=progress-indicator]]:bg-primary"
+        )}
       />
     </div>
   );

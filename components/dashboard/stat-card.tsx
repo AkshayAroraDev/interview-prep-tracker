@@ -19,18 +19,20 @@ export function StatCard({
   accentClassName,
 }: StatCardProps) {
   return (
-    <Card className="border-border/60 bg-card/50 shadow-none transition-colors duration-150 hover:bg-card">
-      <CardContent className="flex items-start justify-between gap-3 p-4">
-        <div className="min-w-0 space-y-1">
+    <Card className="border-border/70 bg-card shadow-none transition-colors duration-150 hover:bg-card">
+      <CardContent className="flex min-h-[112px] items-start justify-between gap-4 p-5">
+        <div className="min-w-0 space-y-1.5">
           <p className="text-xs font-medium text-muted-foreground">{label}</p>
-          <p className="text-2xl font-semibold tracking-tight tabular-nums">{value}</p>
+          <p className="text-[1.6rem] leading-none font-semibold tracking-tight tabular-nums">
+            {value}
+          </p>
           {hint ? (
             <p className="truncate text-xs text-muted-foreground">{hint}</p>
           ) : null}
         </div>
         <div
           className={cn(
-            "rounded-md bg-primary/8 p-2 text-primary",
+            "rounded-lg bg-primary/8 p-2.5 text-primary ring-1 ring-primary/12",
             accentClassName,
           )}
         >
