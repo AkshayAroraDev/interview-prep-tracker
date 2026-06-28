@@ -261,7 +261,16 @@ export function useInterviewTracker() {
   }, []);
 
   const exportProgress = useCallback(() => {
-    storageService.exportProgress();
+    void storageService.exportProgress().catch((error: unknown) => {
+      if (
+        error instanceof DOMException &&
+        error.name === "AbortError"
+      ) {
+        return;
+      }
+
+      throw error;
+    });
   }, []);
 
   return {

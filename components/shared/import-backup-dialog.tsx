@@ -73,14 +73,14 @@ export function ImportBackupDialog({ open, onOpenChange }: ImportBackupDialogPro
     }
   }, []);
 
-  const handleRestore = useCallback(() => {
+  const handleRestore = useCallback(async () => {
     if (!payload || isRestoring) {
       return;
     }
 
     try {
       setIsRestoring(true);
-      storageService.restoreProgress(payload);
+      await storageService.restoreProgress(payload);
       handleClose(false);
       window.location.reload();
     } catch (cause) {

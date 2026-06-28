@@ -552,17 +552,80 @@ function downloadJson(json: string, fileName: string): void {
   URL.revokeObjectURL(url);
 }
 
-function exportProgress(fileName?: string): void {
+function canUseNativeSaveDialog(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  const candidate = window as unknown as {
+    showSaveFilePicker?: (options: {
+      suggestedName?: string;
+      types?: Array<{
+        description?: string;
+        accept: Record<string, string[]>;
+      }>;
+    }) => Promise<{
+      createWritable: () => Promise<{
+        write: (data: string) => Promise<void>;
+        close: () => Promise<void>;
+      }>;
+    }>;
+  };
+
+  return typeof candidate.showSaveFilePicker === "function";
+}
+
+async function saveJsonWithNativeDialog(json: string, fileName: string): Promise<void> {
+  const candidate = window as unknown as {
+    showSaveFilePicker: (options: {
+      suggestedName?: string;
+      types?: Array<{
+        description?: string;
+        accept: Record<string, string[]>;
+      }>;
+    }) => Promise<{
+      createWritable: () => Promise<{
+        write: (data: string) => Promise<void>;
+        close: () => Promise<void>;
+      }>;
+    }>;
+  };
+
+  const fileHandle = await candidate.showSaveFilePicker({
+    suggestedName: fileName,
+    types: [
+      {
+        description: "JSON files",
+        accept: {
+          "application/json": [".json"],
+        },
+      },
+    ],
+  });
+
+  const writable = await fileHandle.createWritable();
+  await writable.write(json);
+  await writable.close();
+}
+
+async function exportProgress(fileName?: string): Promise<void> {
   if (!canUseStorage()) {
     return;
   }
 
   const payload = createProgressExportPayload();
   const json = JSON.stringify(payload, null, 2);
-  downloadJson(json, fileName ?? getExportFileName());
+  const resolvedFileName = fileName ?? getExportFileName();
+
+  if (canUseNativeSaveDialog()) {
+    await saveJsonWithNativeDialog(json, resolvedFileName);
+    return;
+  }
+
+  downloadJson(json, resolvedFileName);
 }
 
-function restoreProgress(payload: ProgressExportPayload): void {
+async function restoreProgress(payload: ProgressExportPayload): Promise<void> {
   if (!canUseStorage()) {
     return;
   }
@@ -575,7 +638,7 @@ function restoreProgress(payload: ProgressExportPayload): void {
 
   const hasThemeInBackup = validated.data.settings?.theme !== undefined;
 
-  exportProgress(getPreRestoreBackupFileName());
+  await exportProgress(getPreRestoreBackupFileName());
 
   try {
     setJson(STORAGE_KEY, validated.data.tracker);
