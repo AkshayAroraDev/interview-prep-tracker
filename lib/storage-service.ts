@@ -1,10 +1,31 @@
 import { STORAGE_KEY } from "@/lib/constants";
 import { THEME_STORAGE_KEY } from "@/lib/theme";
 import packageJson from "@/package.json";
-import type { TrackerState } from "@/types";
+import type { Section, Technology, Topic, TrackerState } from "@/types";
 
 const MIGRATION_META_KEY = `${STORAGE_KEY}:migration-meta`;
-const EXPORT_VERSION = 1;
+const CURRENT_BACKUP_VERSION = 3;
+const TOPIC_STATUS_VALUES = new Set([
+  "not_started",
+  "in_progress",
+  "completed",
+  "needs_review",
+]);
+const PRIORITY_VALUES = new Set(["low", "medium", "high"]);
+const INTERVIEW_FREQUENCY_VALUES = new Set(["frequent", "occasional", "rare"]);
+const CONFIDENCE_VALUES = new Set(["low", "medium", "high"]);
+
+interface BackupModules {
+  flashCards: {
+    cards: unknown[];
+  };
+  notes: {
+    entries: unknown[];
+  };
+  revisionPlanner: {
+    plans: unknown[];
+  };
+}
 
 interface MigrationMeta {
   removedTechnologies: string[];
@@ -15,9 +36,11 @@ interface MigrationMeta {
 interface ExportData {
   tracker: TrackerState;
   migrationMeta: MigrationMeta;
-  settings?: {
+  settings: {
     theme?: string;
+    [key: string]: unknown;
   };
+  modules: BackupModules;
 }
 
 export interface ProgressExportPayload {
@@ -42,6 +65,20 @@ interface ParsedBackupResult {
   preview: BackupPreview;
 }
 
+function createEmptyModules(): BackupModules {
+  return {
+    flashCards: {
+      cards: [],
+    },
+    notes: {
+      entries: [],
+    },
+    revisionPlanner: {
+      plans: [],
+    },
+  };
+}
+
 function canUseStorage(): boolean {
   return typeof window !== "undefined";
 }
@@ -62,6 +99,14 @@ function setItem(key: string, value: string): void {
   window.localStorage.setItem(key, value);
 }
 
+function removeItem(key: string): void {
+  if (!canUseStorage()) {
+    return;
+  }
+
+  window.localStorage.removeItem(key);
+}
+
 function getJson<T>(key: string): T | null {
   const raw = getItem(key);
   if (!raw) {
@@ -79,6 +124,141 @@ function setJson<T>(key: string, value: T): void {
   setItem(key, JSON.stringify(value));
 }
 
+function validationError(path: string, message: string): never {
+  throw new Error(`Invalid backup at ${path}: ${message}`);
+}
+
+function asRecord(value: unknown, path: string): Record<string, unknown> {
+  if (!isRecord(value)) {
+    validationError(path, "expected an object");
+  }
+
+  return value;
+}
+
+function asArray(value: unknown, path: string): unknown[] {
+  if (!Array.isArray(value)) {
+    validationError(path, "expected an array");
+  }
+
+  return value;
+}
+
+function asString(value: unknown, path: string): string {
+  if (typeof value !== "string") {
+    validationError(path, "expected a string");
+  }
+
+  return value;
+}
+
+function asNonEmptyString(value: unknown, path: string): string {
+  const parsed = asString(value, path);
+  if (parsed.trim().length === 0) {
+    validationError(path, "must not be empty");
+  }
+
+  return parsed;
+}
+
+function asOptionalString(value: unknown, path: string): string | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  return asString(value, path);
+}
+
+function asIsoDateString(value: unknown, path: string): string {
+  const parsed = asString(value, path);
+  if (Number.isNaN(Date.parse(parsed))) {
+    validationError(path, "expected a valid date string");
+  }
+
+  return parsed;
+}
+
+function asEnumValue(value: unknown, path: string, allowed: Set<string>): string {
+  const parsed = asString(value, path);
+  if (!allowed.has(parsed)) {
+    validationError(path, `unsupported value '${parsed}'`);
+  }
+
+  return parsed;
+}
+
+function asStringArray(value: unknown, path: string): string[] {
+  const items = asArray(value, path);
+  return items.map((item, index) => asString(item, `${path}[${index}]`));
+}
+
+function validateTopic(value: unknown, path: string): Topic {
+  const record = asRecord(value, path);
+  const resources =
+    record.resources === undefined
+      ? undefined
+      : asStringArray(record.resources, `${path}.resources`);
+
+  return {
+    id: asNonEmptyString(record.id, `${path}.id`),
+    title: asNonEmptyString(record.title, `${path}.title`),
+    interviewFrequency: asEnumValue(
+      record.interviewFrequency,
+      `${path}.interviewFrequency`,
+      INTERVIEW_FREQUENCY_VALUES,
+    ) as Topic["interviewFrequency"],
+    confidence: asEnumValue(record.confidence, `${path}.confidence`, CONFIDENCE_VALUES) as Topic["confidence"],
+    notes: asString(record.notes, `${path}.notes`),
+    resources,
+    status: asEnumValue(record.status, `${path}.status`, TOPIC_STATUS_VALUES) as Topic["status"],
+    priority: asEnumValue(record.priority, `${path}.priority`, PRIORITY_VALUES) as Topic["priority"],
+    createdAt: asIsoDateString(record.createdAt, `${path}.createdAt`),
+    updatedAt: asIsoDateString(record.updatedAt, `${path}.updatedAt`),
+  };
+}
+
+function validateSection(value: unknown, path: string): Section {
+  const record = asRecord(value, path);
+  const topics = asArray(record.topics, `${path}.topics`).map((topic, index) =>
+    validateTopic(topic, `${path}.topics[${index}]`),
+  );
+
+  return {
+    id: asNonEmptyString(record.id, `${path}.id`),
+    technologyId: asNonEmptyString(record.technologyId, `${path}.technologyId`),
+    title: asNonEmptyString(record.title, `${path}.title`),
+    description: asOptionalString(record.description, `${path}.description`),
+    topics,
+  };
+}
+
+function validateTechnology(value: unknown, path: string): Technology {
+  const record = asRecord(value, path);
+  const sections = asArray(record.sections, `${path}.sections`).map((section, index) =>
+    validateSection(section, `${path}.sections[${index}]`),
+  );
+
+  return {
+    id: asNonEmptyString(record.id, `${path}.id`),
+    name: asNonEmptyString(record.name, `${path}.name`),
+    description: asOptionalString(record.description, `${path}.description`),
+    color: asNonEmptyString(record.color, `${path}.color`),
+    icon: asOptionalString(record.icon, `${path}.icon`),
+    sections,
+  };
+}
+
+function validateTracker(value: unknown, path: string): TrackerState {
+  const record = asRecord(value, path);
+  const technologies = asArray(record.technologies, `${path}.technologies`).map(
+    (technology, index) => validateTechnology(technology, `${path}.technologies[${index}]`),
+  );
+
+  return {
+    technologies,
+  };
+}
+
 function normalizeMigrationMeta(meta: Partial<MigrationMeta> | null | undefined): MigrationMeta {
   return {
     removedTechnologies: Array.isArray(meta?.removedTechnologies)
@@ -91,6 +271,119 @@ function normalizeMigrationMeta(meta: Partial<MigrationMeta> | null | undefined)
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
+}
+
+function normalizeModules(modules: unknown): BackupModules {
+  if (!isRecord(modules)) {
+    return createEmptyModules();
+  }
+
+  return {
+    flashCards: {
+      cards:
+        isRecord(modules.flashCards) && Array.isArray(modules.flashCards.cards)
+          ? modules.flashCards.cards
+          : [],
+    },
+    notes: {
+      entries:
+        isRecord(modules.notes) && Array.isArray(modules.notes.entries)
+          ? modules.notes.entries
+          : [],
+    },
+    revisionPlanner: {
+      plans:
+        isRecord(modules.revisionPlanner) && Array.isArray(modules.revisionPlanner.plans)
+          ? modules.revisionPlanner.plans
+          : [],
+    },
+  };
+}
+
+function normalizeSettings(settings: unknown): ExportData["settings"] {
+  if (!isRecord(settings)) {
+    return {};
+  }
+
+  return {
+    ...settings,
+    theme: typeof settings.theme === "string" ? settings.theme : undefined,
+  };
+}
+
+function extractVersion(payload: Record<string, unknown>): number {
+  const version = payload.version;
+  if (typeof version !== "number" || Number.isNaN(version)) {
+    throw new Error("Invalid backup version.");
+  }
+
+  if (!Number.isInteger(version) || version < 1) {
+    throw new Error("Unsupported backup version.");
+  }
+
+  return version;
+}
+
+function migrateToVersion2(payload: Record<string, unknown>): Record<string, unknown> {
+  const data = isRecord(payload.data) ? payload.data : {};
+
+  return {
+    ...payload,
+    version: 2,
+    data: {
+      ...data,
+      settings: normalizeSettings(data.settings),
+    },
+  };
+}
+
+function migrateToVersion3(payload: Record<string, unknown>): Record<string, unknown> {
+  const data = isRecord(payload.data) ? payload.data : {};
+
+  return {
+    ...payload,
+    version: 3,
+    data: {
+      ...data,
+      settings: normalizeSettings(data.settings),
+      modules: normalizeModules(data.modules),
+    },
+  };
+}
+
+function migrateBackupPayload(input: Record<string, unknown>): {
+  sourceVersion: number;
+  payload: Record<string, unknown>;
+} {
+  const sourceVersion = extractVersion(input);
+
+  if (sourceVersion > CURRENT_BACKUP_VERSION) {
+    throw new Error("Backup was created by a newer app version and cannot be restored here.");
+  }
+
+  let version = sourceVersion;
+  let payload = { ...input };
+
+  while (version < CURRENT_BACKUP_VERSION) {
+    if (version === 1) {
+      payload = migrateToVersion2(payload);
+      version = 2;
+      continue;
+    }
+
+    if (version === 2) {
+      payload = migrateToVersion3(payload);
+      version = 3;
+      continue;
+    }
+
+    throw new Error(`No migration path found for backup version ${version}.`);
+  }
+
+  return {
+    sourceVersion,
+    payload,
+  };
 }
 
 function getDateStamp(date = new Date()): string {
@@ -108,17 +401,16 @@ function getPreRestoreBackupFileName(date = new Date()): string {
   return `interview-tracker-backup-${getDateStamp(date)}-before-restore.json`;
 }
 
-function parseTrackerFromData(data: Record<string, unknown>): TrackerState | null {
-  const candidate = isRecord(data.tracker) ? data.tracker : data;
-  const technologies = candidate.technologies;
-
-  if (!Array.isArray(technologies)) {
-    return null;
+function parseTrackerFromData(data: Record<string, unknown>): TrackerState {
+  if (isRecord(data.tracker)) {
+    return validateTracker(data.tracker, "data.tracker");
   }
 
-  return {
-    technologies: technologies as TrackerState["technologies"],
-  };
+  if (Array.isArray(data.technologies)) {
+    return validateTracker(data, "data");
+  }
+
+  validationError("data.tracker", "missing tracker object");
 }
 
 function countTopicStats(state: TrackerState): { completed: number; notes: number } {
@@ -156,50 +448,37 @@ function validateBackupPayload(payload: unknown): ParsedBackupResult {
     throw new Error("Backup must be a JSON object.");
   }
 
-  const version = payload.version;
-  const exportedAt = payload.exportedAt;
-  const appVersion = payload.appVersion;
-  const data = payload.data;
+  const { sourceVersion, payload: migratedPayload } = migrateBackupPayload(payload);
 
-  if (typeof version !== "number" || Number.isNaN(version)) {
-    throw new Error("Invalid backup version.");
-  }
+  const version = extractVersion(migratedPayload);
+  const exportedAt = migratedPayload.exportedAt;
+  const appVersion = migratedPayload.appVersion;
+  const data = migratedPayload.data;
 
-  if (typeof exportedAt !== "string" || Number.isNaN(Date.parse(exportedAt))) {
-    throw new Error("Invalid export date.");
-  }
+  const validatedExportedAt = asIsoDateString(exportedAt, "exportedAt");
+  const validatedAppVersion = asNonEmptyString(appVersion, "appVersion");
 
-  if (typeof appVersion !== "string" || appVersion.trim().length === 0) {
-    throw new Error("Invalid application version.");
-  }
+  const dataRecord = asRecord(data, "data");
 
-  if (!isRecord(data)) {
-    throw new Error("Backup data is missing.");
-  }
-
-  const tracker = parseTrackerFromData(data);
-  if (!tracker) {
-    throw new Error("Backup data does not contain a valid tracker state.");
-  }
+  const tracker = parseTrackerFromData(dataRecord);
 
   const normalizedMigrationMeta = normalizeMigrationMeta(
-    isRecord(data.migrationMeta) ? (data.migrationMeta as Partial<MigrationMeta>) : null,
+    isRecord(dataRecord.migrationMeta)
+      ? (dataRecord.migrationMeta as Partial<MigrationMeta>)
+      : null,
   );
-
-  const settings = isRecord(data.settings)
-    ? {
-        theme: typeof data.settings.theme === "string" ? data.settings.theme : undefined,
-      }
-    : undefined;
+  const settings = normalizeSettings(dataRecord.settings);
+  const modules = normalizeModules(dataRecord.modules);
 
   const normalizedPayload: ProgressExportPayload = {
     version,
-    exportedAt,
-    appVersion,
+    exportedAt: validatedExportedAt,
+    appVersion: validatedAppVersion,
     data: {
       tracker,
       migrationMeta: normalizedMigrationMeta,
       settings,
+      modules,
     },
   };
 
@@ -208,9 +487,9 @@ function validateBackupPayload(payload: unknown): ParsedBackupResult {
   return {
     payload: normalizedPayload,
     preview: {
-      exportedAt,
-      appVersion,
-      backupVersion: version,
+      exportedAt: validatedExportedAt,
+      appVersion: validatedAppVersion,
+      backupVersion: sourceVersion,
       technologies: tracker.technologies.length,
       completedTopics: stats.completed,
       notesCount: stats.notes,
@@ -247,12 +526,13 @@ function createExportData(): ExportData {
     settings: {
       theme: currentTheme ?? undefined,
     },
+    modules: createEmptyModules(),
   };
 }
 
 function createProgressExportPayload(): ProgressExportPayload {
   return {
-    version: EXPORT_VERSION,
+    version: CURRENT_BACKUP_VERSION,
     exportedAt: new Date().toISOString(),
     appVersion: packageJson.version,
     data: createExportData(),
@@ -287,13 +567,53 @@ function restoreProgress(payload: ProgressExportPayload): void {
     return;
   }
 
+  const validated = validateBackupPayload(payload).payload;
+
+  const previousTracker = getItem(STORAGE_KEY);
+  const previousMigrationMeta = getItem(MIGRATION_META_KEY);
+  const previousTheme = getItem(THEME_STORAGE_KEY);
+
+  const hasThemeInBackup = validated.data.settings?.theme !== undefined;
+
   exportProgress(getPreRestoreBackupFileName());
 
-  setJson(STORAGE_KEY, payload.data.tracker);
-  setJson(MIGRATION_META_KEY, normalizeMigrationMeta(payload.data.migrationMeta));
+  try {
+    setJson(STORAGE_KEY, validated.data.tracker);
+    setJson(MIGRATION_META_KEY, normalizeMigrationMeta(validated.data.migrationMeta));
 
-  if (payload.data.settings?.theme) {
-    setItem(THEME_STORAGE_KEY, payload.data.settings.theme);
+    if (hasThemeInBackup) {
+      setItem(THEME_STORAGE_KEY, validated.data.settings.theme as string);
+    }
+  } catch (cause) {
+    try {
+      if (previousTracker === null) {
+        removeItem(STORAGE_KEY);
+      } else {
+        setItem(STORAGE_KEY, previousTracker);
+      }
+
+      if (previousMigrationMeta === null) {
+        removeItem(MIGRATION_META_KEY);
+      } else {
+        setItem(MIGRATION_META_KEY, previousMigrationMeta);
+      }
+
+      if (hasThemeInBackup) {
+        if (previousTheme === null) {
+          removeItem(THEME_STORAGE_KEY);
+        } else {
+          setItem(THEME_STORAGE_KEY, previousTheme);
+        }
+      }
+    } catch {
+      throw new Error("Restore failed and rollback could not complete.");
+    }
+
+    if (cause instanceof Error && cause.message) {
+      throw new Error(`Restore failed and changes were rolled back: ${cause.message}`);
+    }
+
+    throw new Error("Restore failed and changes were rolled back.");
   }
 }
 
