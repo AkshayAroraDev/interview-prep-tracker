@@ -1,18 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, RotateCcw } from "lucide-react";
+import { Download, Plus, RotateCcw, Upload } from "lucide-react";
 
 import { useTracker } from "@/components/providers/tracker-provider";
 import { EmptyState } from "@/components/shared/empty-state";
+import { ImportBackupDialog } from "@/components/shared/import-backup-dialog";
 import { TechnologyCard } from "@/components/technology/technology-card";
 import { TechnologyFormDialog } from "@/components/technology/technology-form-dialog";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 
 export function TechnologyGrid() {
-  const { state, isHydrated, resetToSeed } = useTracker();
+  const { state, isHydrated, resetToSeed, exportProgress } = useTracker();
   const [createOpen, setCreateOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
 
   if (!isHydrated) {
@@ -38,6 +40,14 @@ export function TechnologyGrid() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
+            <Upload className="size-4" />
+            Import backup
+          </Button>
+          <Button variant="outline" size="sm" onClick={exportProgress}>
+            <Download className="size-4" />
+            Export progress
+          </Button>
           <Button variant="outline" size="sm" onClick={() => setResetOpen(true)}>
             <RotateCcw className="size-4" />
             Reset demo data
@@ -69,6 +79,7 @@ export function TechnologyGrid() {
       )}
 
       <TechnologyFormDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <ImportBackupDialog open={importOpen} onOpenChange={setImportOpen} />
       <ConfirmDialog
         open={resetOpen}
         onOpenChange={setResetOpen}

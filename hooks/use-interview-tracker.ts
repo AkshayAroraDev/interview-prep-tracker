@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { DEFAULT_TOPIC_METADATA, STORAGE_KEY } from "@/lib/constants";
 import { generateId } from "@/lib/id";
+import { storageService } from "@/lib/storage-service";
 import { loadState, resetState, saveState } from "@/lib/storage";
 import type {
   CreateSectionInput,
@@ -259,6 +260,10 @@ export function useInterviewTracker() {
     setState(fresh);
   }, []);
 
+  const exportProgress = useCallback(() => {
+    storageService.exportProgress();
+  }, []);
+
   return {
     state,
     isHydrated,
@@ -276,6 +281,7 @@ export function useInterviewTracker() {
     deleteTopic,
     getTechnology,
     resetToSeed,
+    exportProgress,
   };
 }
 

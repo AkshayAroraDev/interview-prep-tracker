@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from "react";
 
-import { THEME_STORAGE_KEY } from "@/lib/theme";
+import { storageService } from "@/lib/storage-service";
 
 type Theme = "light" | "dark";
 
@@ -28,7 +28,7 @@ function applyTheme(theme: Theme) {
 
 function getInitialTheme(): Theme {
   if (typeof window === "undefined") return "light";
-  const stored = window.localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
+  const stored = storageService.getItem(storageService.keys.theme) as Theme | null;
   if (stored) return stored;
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
@@ -44,7 +44,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   const setTheme = useCallback((next: Theme) => {
     setThemeState(next);
-    window.localStorage.setItem(THEME_STORAGE_KEY, next);
+    storageService.setItem(storageService.keys.theme, next);
     applyTheme(next);
   }, []);
 

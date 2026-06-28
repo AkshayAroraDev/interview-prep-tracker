@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { GraduationCap, LayoutDashboard, Plus, RotateCcw } from "lucide-react";
+import { Download, GraduationCap, LayoutDashboard, Plus, RotateCcw, Upload } from "lucide-react";
 import { useState } from "react";
 
+import { ImportBackupDialog } from "@/components/shared/import-backup-dialog";
 import { useTracker } from "@/components/providers/tracker-provider";
 import { TechnologyFormDialog } from "@/components/technology/technology-form-dialog";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
@@ -21,8 +22,9 @@ interface SidebarProps {
 
 export function Sidebar({ onNavigate, className }: SidebarProps) {
   const pathname = usePathname();
-  const { state, isHydrated, resetToSeed } = useTracker();
+  const { state, isHydrated, resetToSeed, exportProgress } = useTracker();
   const [createOpen, setCreateOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
 
   const isOverview = pathname === "/";
@@ -136,6 +138,24 @@ export function Sidebar({ onNavigate, className }: SidebarProps) {
           variant="ghost"
           size="sm"
           className="w-full justify-start text-muted-foreground"
+          onClick={() => setImportOpen(true)}
+        >
+          <Upload className="size-4" />
+          Import backup
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full justify-start text-muted-foreground"
+          onClick={exportProgress}
+        >
+          <Download className="size-4" />
+          Export progress
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full justify-start text-muted-foreground"
           onClick={() => setResetOpen(true)}
         >
           <RotateCcw className="size-4" />
@@ -144,6 +164,7 @@ export function Sidebar({ onNavigate, className }: SidebarProps) {
       </div>
 
       <TechnologyFormDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <ImportBackupDialog open={importOpen} onOpenChange={setImportOpen} />
       <ConfirmDialog
         open={resetOpen}
         onOpenChange={setResetOpen}

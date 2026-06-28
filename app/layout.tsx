@@ -3,10 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 
 import { AppShell } from "@/components/layout/app-shell";
+import { storageService } from "@/lib/storage-service";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { TrackerProvider } from "@/components/providers/tracker-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { THEME_STORAGE_KEY } from "@/lib/theme";
 
 import "./globals.css";
 
@@ -26,16 +26,7 @@ export const metadata: Metadata = {
     "Track interview preparation across technologies, sections, and topics.",
 };
 
-const themeInitScript = `
-(function() {
-  try {
-    var stored = localStorage.getItem("${THEME_STORAGE_KEY}");
-    var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    var theme = stored || (prefersDark ? "dark" : "light");
-    if (theme === "dark") document.documentElement.classList.add("dark");
-  } catch (e) {}
-})();
-`;
+const themeInitScript = storageService.getThemeInitScript();
 
 export default function RootLayout({
   children,

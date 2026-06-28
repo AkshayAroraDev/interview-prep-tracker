@@ -1,9 +1,10 @@
 import { seedData } from "@/data/seed";
 import { DEFAULT_TOPIC_METADATA, STORAGE_KEY } from "@/lib/constants";
 import { generateId } from "@/lib/id";
+import { storageService } from "@/lib/storage-service";
 import type { TrackerState } from "@/types";
 
-const MIGRATION_META_KEY = `${STORAGE_KEY}:migration-meta`;
+const MIGRATION_META_KEY = storageService.keys.migrationMeta;
 
 type Technology = TrackerState["technologies"][number];
 type Section = Technology["sections"][number];
@@ -64,7 +65,7 @@ function loadMigrationMeta(): MigrationMeta {
   }
 
   try {
-    const raw = window.localStorage.getItem(MIGRATION_META_KEY);
+    const raw = storageService.getItem(MIGRATION_META_KEY);
     if (!raw) {
       return EMPTY_MIGRATION_META;
     }
@@ -88,7 +89,7 @@ function saveMigrationMeta(meta: MigrationMeta): void {
     return;
   }
 
-  window.localStorage.setItem(MIGRATION_META_KEY, JSON.stringify(meta));
+  storageService.setJson(MIGRATION_META_KEY, meta);
 }
 
 function withUnique(values: string[]): string[] {
@@ -348,7 +349,7 @@ export function loadState(): TrackerState {
   }
 
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = storageService.getItem(STORAGE_KEY);
     if (!raw) {
       const seeded = structuredClone(seedData);
       saveState(seeded);
@@ -383,10 +384,10 @@ export function saveState(state: TrackerState): void {
     return;
   }
 
-  const previousState = parseState(window.localStorage.getItem(STORAGE_KEY));
+  const previousState = parseState(storageService.getItem(STORAGE_KEY));
   updateMigrationMeta(previousState, state);
 
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  storageService.setJson(STORAGE_KEY, state);
 }
 
 export function resetState(): TrackerState {
