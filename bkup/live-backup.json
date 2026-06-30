@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "exportedAt": "2026-06-28T06:57:23.286Z",
+  "exportedAt": "2026-06-30T18:16:02.498Z",
   "appVersion": "0.1.0",
   "data": {
     "tracker": {
@@ -24,10 +24,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-06-28T08:02:06.995Z"
                 },
                 {
                   "id": "2f773326-3cd4-4ce8-a9e9-3875472ea405",
@@ -35,10 +35,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-06-28T08:19:49.352Z"
                 },
                 {
                   "id": "6dcc338c-376a-4bfc-bef7-796afd3f9de5",
@@ -49,7 +49,7 @@
                   "status": "not_started",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-06-29T19:35:31.283Z"
                 },
                 {
                   "id": "f0b5506c-466e-40b7-8132-9ea090e85776",
@@ -68,10 +68,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-06-28T08:19:51.917Z"
                 },
                 {
                   "id": "ad53fc5e-5ee2-4980-98a2-0d0b8d87c1bc",
@@ -134,10 +134,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-06-28T08:19:58.176Z"
                 },
                 {
                   "id": "d2f033f1-0ba6-41ec-9f60-9809bc270714",
@@ -145,10 +145,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-06-28T08:19:58.677Z"
                 },
                 {
                   "id": "b6d6cedf-d3ae-47cb-b5c0-b7d00ed28c19",
@@ -444,10 +444,14 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
-                  "priority": "medium",
+                  "status": "completed",
+                  "priority": "high",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-06-29T19:05:50.150Z",
+                  "resources": [
+                    "https://www.youtube.com/watch?v=wB3Jf7yyvfU",
+                    "https://react-hook-form.com/get-started?utm_source=chatgpt.com"
+                  ]
                 },
                 {
                   "id": "3263c4c3-3e58-4862-bb62-7d12c1fa0ae0",
@@ -459,6 +463,18 @@
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
                   "updatedAt": "2026-06-27T13:14:14.611Z"
+                },
+                {
+                  "id": "1813a11d-e454-4fcd-b554-5c7ed272532b",
+                  "title": "Zod Resolver",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [],
+                  "status": "not_started",
+                  "priority": "high",
+                  "createdAt": "2026-06-29T19:05:40.782Z",
+                  "updatedAt": "2026-06-29T19:05:47.852Z"
                 }
               ]
             },
@@ -1891,10 +1907,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-06-28T07:42:48.075Z"
                 },
                 {
                   "id": "85fc2464-65d4-40e0-af54-ce03f4194530",
@@ -1913,13 +1929,13 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
+                  "resources": [
+                    "https://javascript.info/call-apply-decorators"
+                  ],
                   "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-28T06:11:57.126Z",
-                  "resources": [
-                    "https://javascript.info/call-apply-decorators"
-                  ]
+                  "updatedAt": "2026-06-28T06:11:57.126Z"
                 },
                 {
                   "id": "44a98bb9-95c3-4f79-a569-939f2a8273b4",
@@ -1927,10 +1943,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-06-28T07:42:46.351Z"
                 }
               ]
             },
@@ -4325,10 +4341,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
-                  "priority": "medium",
+                  "status": "completed",
+                  "priority": "high",
                   "createdAt": "2026-06-27T13:47:35.459Z",
-                  "updatedAt": "2026-06-27T13:47:35.459Z"
+                  "updatedAt": "2026-06-28T16:13:02.079Z"
                 },
                 {
                   "id": "eac66102-64eb-4475-b0c1-55c05dfe94bb",
@@ -4725,14 +4741,68 @@
                   "title": "Debounce",
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
-                  "notes": "",
+                  "notes": "Debouncing controls how often a function can execute over time. When a JavaScript function is debounced with a wait time of wait milliseconds, it runs only after wait milliseconds have elapsed since the debounced function was last called.",
                   "resources": [
                     "https://www.greatfrontend.com/interviews/study/gfe75/questions/javascript/debounce"
                   ],
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-28T04:53:12.257Z",
-                  "updatedAt": "2026-06-28T04:53:12.257Z"
+                  "updatedAt": "2026-06-28T16:14:02.482Z"
+                },
+                {
+                  "id": "d159cef4-82fe-42db-bad9-5ec9647e6ea5",
+                  "title": "Throttle",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "Throttling is a technique used to control how many times a function is allowed to execute over time. When a JavaScript function is said to be throttled with a wait time of X milliseconds, it can only be invoked at most once every X milliseconds. The callback is invoked immediately and cannot be invoked again for the rest of the wait duration.",
+                  "resources": [
+                    "https://www.greatfrontend.com/interviews/study/gfe75/questions/javascript/throttle"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-06-28T16:14:40.610Z",
+                  "updatedAt": "2026-06-28T16:14:54.716Z"
+                },
+                {
+                  "id": "4cf417d0-367f-4aff-bab3-8a878e9d54fc",
+                  "title": "Compose",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "compose is a functional programming pattern that combines multiple functions into a single function, executing them from right to left. The output of each function serves as the input for the next function in line.",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/Compose.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-06-29T17:19:46.889Z",
+                  "updatedAt": "2026-06-29T17:20:35.552Z"
+                },
+                {
+                  "id": "8f333215-0f0c-41a4-8ac6-9a12388c56d6",
+                  "title": "Pipe",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "Pipe will have similar implementation as compose but from left to right iteration of the function and calling also will be the left to right",
+                  "resources": [],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-06-29T17:21:06.809Z",
+                  "updatedAt": "2026-06-29T17:21:09.236Z"
+                },
+                {
+                  "id": "65d2c5e3-fd1c-4e12-9f03-212c604abb6b",
+                  "title": "Currying",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "Currying is the technique of converting a function that takes multiple arguments into a sequence of functions that each take a single argument.",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/Curry.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-06-30T17:32:13.068Z",
+                  "updatedAt": "2026-06-30T18:15:36.840Z"
                 }
               ]
             }
@@ -4846,7 +4916,8 @@
       ],
       "removedSections": [
         "angular::testing",
-        "dsa::stack"
+        "dsa::stack",
+        "gfe 75::throttle"
       ],
       "removedTopics": [
         "angular::fundamentals::angular architecture",
