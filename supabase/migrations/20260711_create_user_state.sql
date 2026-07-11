@@ -31,6 +31,8 @@ begin
 end;
 $$;
 
+drop trigger if exists user_state_set_updated_at on public.user_state;
+
 create trigger user_state_set_updated_at
 before update on public.user_state
 for each row

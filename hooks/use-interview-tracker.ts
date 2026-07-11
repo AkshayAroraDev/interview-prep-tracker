@@ -5,7 +5,11 @@ import { useCallback, useEffect, useState } from "react";
 import { seedData } from "@/data/seed";
 import { DEFAULT_TOPIC_METADATA, STORAGE_KEY } from "@/lib/constants";
 import { generateId } from "@/lib/id";
-import { storageRepository } from "@/lib/repositories/local-storage-repository";
+import {
+  hybridStorageRepository,
+  storageRepository,
+  type SyncStatus,
+} from "@/lib/repositories/hybrid-storage-repository";
 import { storageService } from "@/lib/storage-service";
 import type {
   CreateSectionInput,
@@ -53,6 +57,9 @@ function updateSection(
 export function useInterviewTracker() {
   const [state, setState] = useState<TrackerState>({ technologies: [] });
   const [isHydrated, setIsHydrated] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>(
+    hybridStorageRepository.getSyncStatus(),
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -78,6 +85,8 @@ export function useInterviewTracker() {
       isMounted = false;
     };
   }, []);
+
+  useEffect(() => hybridStorageRepository.subscribeSyncStatus(setSyncStatus), []);
 
   const persist = useCallback((next: TrackerState | ((prev: TrackerState) => TrackerState)) => {
     setState((prev) => {
@@ -279,7 +288,7 @@ export function useInterviewTracker() {
   const resetToSeed = useCallback(() => {
     const fresh = structuredClone(seedData);
 
-    storageRepository.save(fresh);
+    void storageRepository.save(fresh);
     setState(fresh);
   }, []);
 
@@ -299,6 +308,7 @@ export function useInterviewTracker() {
   return {
     state,
     isHydrated,
+    syncStatus,
     storageKey: STORAGE_KEY,
     addTechnology,
     updateTechnologyMeta,

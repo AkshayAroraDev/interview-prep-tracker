@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { AuthControls } from "@/components/auth/auth-controls";
 import { Sidebar } from "@/components/layout/sidebar";
+import { SyncStatusBadge } from "@/components/layout/sync-status-badge";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
@@ -52,6 +53,7 @@ export function AppShell({ children }: AppShellProps) {
           <div className="hidden md:block" />
 
           <div className="flex items-center gap-2">
+            <SyncStatusBadge className="hidden sm:inline-flex" />
             <AuthControls />
             <ThemeToggle />
           </div>

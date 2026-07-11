@@ -1,6 +1,6 @@
 import { seedData } from "@/data/seed";
 import { supabase } from "@/lib/supabase/client";
-import { getCurrentUser } from "@/lib/supabase/auth";
+import { getCurrentSession } from "@/lib/supabase/auth";
 import type { TrackerState } from "@/types";
 
 interface UserStateRow {
@@ -29,7 +29,8 @@ function isTrackerState(value: unknown): value is TrackerState {
 }
 
 async function getAuthenticatedUserId(): Promise<string> {
-  const user = await getCurrentUser();
+  const session = await getCurrentSession();
+  const user = session?.user;
 
   if (!user) {
     throw new Error("SupabaseRepository requires an authenticated user.");
@@ -77,40 +78,47 @@ async function insertInitialUserState(userId: string): Promise<TrackerState> {
   return isTrackerState(stateJson) ? structuredClone(stateJson) : initialState;
 }
 
+export async function loadUserStateByUserId(userId: string): Promise<TrackerState> {
+  const existing = await fetchUserState(userId);
+
+  if (existing && isTrackerState(existing.state_json)) {
+    return structuredClone(existing.state_json);
+  }
+
+  if (existing) {
+    return createInitialState();
+  }
+
+  return insertInitialUserState(userId);
+}
+
+export async function saveUserStateByUserId(
+  userId: string,
+  state: TrackerState,
+): Promise<void> {
+  const { error } = await supabase.from("user_state").upsert(
+    {
+      user_id: userId,
+      state_json: state,
+    },
+    {
+      onConflict: "user_id",
+    },
+  );
+
+  if (error) {
+    throw error;
+  }
+}
+
 export const supabaseRepository: SupabaseRepositoryContract = {
   async load(): Promise<TrackerState> {
     const userId = await getAuthenticatedUserId();
-    const existing = await fetchUserState(userId);
-
-    if (existing && isTrackerState(existing.state_json)) {
-      return structuredClone(existing.state_json);
-    }
-
-    const initialState = createInitialState();
-
-    if (existing) {
-      await supabaseRepository.save(initialState);
-      return initialState;
-    }
-
-    return insertInitialUserState(userId);
+    return loadUserStateByUserId(userId);
   },
 
   async save(state: TrackerState): Promise<void> {
     const userId = await getAuthenticatedUserId();
-
-    const { error } = await supabase.from("user_state").upsert(
-      {
-        user_id: userId,
-        state_json: state,
-      },
-      {
-        onConflict: "user_id",
-      },
-    );
-
-    if (error) {
-      throw error;
-    }
+    await saveUserStateByUserId(userId, state);
   },
 };
