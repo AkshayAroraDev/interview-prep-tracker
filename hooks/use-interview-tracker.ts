@@ -2,10 +2,15 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { seedData } from "@/data/seed";
 import { DEFAULT_TOPIC_METADATA, STORAGE_KEY } from "@/lib/constants";
 import { generateId } from "@/lib/id";
+import {
+  hybridStorageRepository,
+  storageRepository,
+  type SyncStatus,
+} from "@/lib/repositories/hybrid-storage-repository";
 import { storageService } from "@/lib/storage-service";
-import { loadState, resetState, saveState } from "@/lib/storage";
 import type {
   CreateSectionInput,
   CreateTechnologyInput,
@@ -21,6 +26,17 @@ import type {
 
 function now() {
   return new Date().toISOString();
+}
+
+function getDateStamp(date = new Date()): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getPreImportBackupFileName(date = new Date()): string {
+  return `interview-tracker-backup-${getDateStamp(date)}-before-restore.json`;
 }
 
 function updateTechnology(
@@ -52,16 +68,41 @@ function updateSection(
 export function useInterviewTracker() {
   const [state, setState] = useState<TrackerState>({ technologies: [] });
   const [isHydrated, setIsHydrated] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>(
+    hybridStorageRepository.getSyncStatus(),
+  );
 
   useEffect(() => {
-    setState(loadState());
-    setIsHydrated(true);
+    let isMounted = true;
+
+    void Promise.resolve(storageRepository.load())
+      .then((loadedState) => {
+        if (isMounted) {
+          setState(loadedState);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setState(structuredClone(seedData));
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsHydrated(true);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
+
+  useEffect(() => hybridStorageRepository.subscribeSyncStatus(setSyncStatus), []);
 
   const persist = useCallback((next: TrackerState | ((prev: TrackerState) => TrackerState)) => {
     setState((prev) => {
       const updated = next instanceof Function ? next(prev) : next;
-      saveState(updated);
+      void Promise.resolve(storageRepository.save(updated));
       return updated;
     });
   }, []);
@@ -85,6 +126,30 @@ export function useInterviewTracker() {
     },
     [persist],
   );
+
+  const importState = useCallback(async (nextState: TrackerState) => {
+    const previousState = state;
+
+    setState(nextState);
+
+    try {
+      await Promise.resolve(storageRepository.save(nextState));
+    } catch (cause) {
+      setState(previousState);
+
+      try {
+        await Promise.resolve(storageRepository.save(previousState));
+      } catch {
+        throw new Error("Import failed and rollback could not complete.");
+      }
+
+      if (cause instanceof Error && cause.message) {
+        throw new Error(`Import failed and changes were rolled back: ${cause.message}`);
+      }
+
+      throw new Error("Import failed and changes were rolled back.");
+    }
+  }, [state]);
 
   const updateTechnologyMeta = useCallback(
     (technologyId: string, input: Partial<CreateTechnologyInput>) => {
@@ -256,12 +321,14 @@ export function useInterviewTracker() {
   );
 
   const resetToSeed = useCallback(() => {
-    const fresh = resetState();
+    const fresh = structuredClone(seedData);
+
+    void storageRepository.save(fresh);
     setState(fresh);
   }, []);
 
-  const exportProgress = useCallback(() => {
-    void storageService.exportProgress().catch((error: unknown) => {
+  const exportProgress = useCallback((fileName?: string) => {
+    void storageService.exportProgress(fileName).catch((error: unknown) => {
       if (
         error instanceof DOMException &&
         error.name === "AbortError"
@@ -276,6 +343,7 @@ export function useInterviewTracker() {
   return {
     state,
     isHydrated,
+    syncStatus,
     storageKey: STORAGE_KEY,
     addTechnology,
     updateTechnologyMeta,
@@ -289,6 +357,7 @@ export function useInterviewTracker() {
     updateTopicPriority,
     deleteTopic,
     getTechnology,
+    importState,
     resetToSeed,
     exportProgress,
   };

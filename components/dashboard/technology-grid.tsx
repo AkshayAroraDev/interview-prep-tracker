@@ -44,7 +44,7 @@ export function TechnologyGrid() {
             <Upload className="size-4" />
             Import backup
           </Button>
-          <Button variant="outline" size="sm" onClick={exportProgress}>
+          <Button variant="outline" size="sm" onClick={() => exportProgress()}>
             <Download className="size-4" />
             Export progress
           </Button>

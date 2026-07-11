@@ -147,7 +147,7 @@ export function Sidebar({ onNavigate, className }: SidebarProps) {
           variant="ghost"
           size="sm"
           className="w-full justify-start text-muted-foreground"
-          onClick={exportProgress}
+          onClick={() => exportProgress()}
         >
           <Download className="size-4" />
           Export progress
