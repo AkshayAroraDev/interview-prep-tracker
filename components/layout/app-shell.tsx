@@ -3,6 +3,7 @@
 import { Menu } from "lucide-react";
 import { useState } from "react";
 
+import { AuthControls } from "@/components/auth/auth-controls";
 import { Sidebar } from "@/components/layout/sidebar";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -50,7 +51,10 @@ export function AppShell({ children }: AppShellProps) {
 
           <div className="hidden md:block" />
 
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <AuthControls />
+            <ThemeToggle />
+          </div>
         </header>
 
         <main className="flex-1 overflow-y-auto">

@@ -4,6 +4,7 @@ import Script from "next/script";
 
 import { AppShell } from "@/components/layout/app-shell";
 import { storageService } from "@/lib/storage-service";
+import { AuthProvider } from "@/components/providers/auth-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { TrackerProvider } from "@/components/providers/tracker-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -46,11 +47,13 @@ export default function RootLayout({
       </head>
       <body className="h-full overflow-hidden bg-background text-foreground">
         <ThemeProvider>
-          <TrackerProvider>
-            <TooltipProvider>
-              <AppShell>{children}</AppShell>
-            </TooltipProvider>
-          </TrackerProvider>
+          <AuthProvider>
+            <TrackerProvider>
+              <TooltipProvider>
+                <AppShell>{children}</AppShell>
+              </TooltipProvider>
+            </TrackerProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
