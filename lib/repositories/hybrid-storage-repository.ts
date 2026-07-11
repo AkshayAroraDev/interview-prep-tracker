@@ -14,6 +14,47 @@ export type SyncStatus = "Synced" | "Syncing" | "Offline" | "Error";
 
 type SyncStatusListener = (status: SyncStatus) => void;
 
+interface UserSyncMeta {
+  lastSavedStateKey: string | null;
+  lastSyncedStateKey: string | null;
+}
+
+function getSyncMetaStorageKey(userId: string): string {
+  return `interview-tracker:sync-meta:${userId}`;
+}
+
+function readUserSyncMeta(userId: string): UserSyncMeta {
+  if (typeof window === "undefined") {
+    return { lastSavedStateKey: null, lastSyncedStateKey: null };
+  }
+
+  try {
+    const raw = window.localStorage.getItem(getSyncMetaStorageKey(userId));
+    if (!raw) {
+      return { lastSavedStateKey: null, lastSyncedStateKey: null };
+    }
+
+    const parsed = JSON.parse(raw) as Partial<UserSyncMeta>;
+
+    return {
+      lastSavedStateKey:
+        typeof parsed.lastSavedStateKey === "string" ? parsed.lastSavedStateKey : null,
+      lastSyncedStateKey:
+        typeof parsed.lastSyncedStateKey === "string" ? parsed.lastSyncedStateKey : null,
+    };
+  } catch {
+    return { lastSavedStateKey: null, lastSyncedStateKey: null };
+  }
+}
+
+function writeUserSyncMeta(userId: string, meta: UserSyncMeta): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.setItem(getSyncMetaStorageKey(userId), JSON.stringify(meta));
+}
+
 export class HybridStorageRepository implements StorageRepository {
   private readonly localRepository = new LocalStorageRepository();
 
@@ -56,6 +97,31 @@ export class HybridStorageRepository implements StorageRepository {
     return JSON.stringify(state);
   }
 
+  private markSavedState(userId: string, stateKey: string): void {
+    const meta = readUserSyncMeta(userId);
+    writeUserSyncMeta(userId, {
+      lastSavedStateKey: stateKey,
+      lastSyncedStateKey: meta.lastSyncedStateKey,
+    });
+  }
+
+  private markSyncedState(userId: string, stateKey: string): void {
+    writeUserSyncMeta(userId, {
+      lastSavedStateKey: stateKey,
+      lastSyncedStateKey: stateKey,
+    });
+  }
+
+  private isDirtyLocalState(userId: string, stateKey: string): boolean {
+    const meta = readUserSyncMeta(userId);
+
+    if (meta.lastSavedStateKey && meta.lastSyncedStateKey) {
+      return meta.lastSavedStateKey !== meta.lastSyncedStateKey;
+    }
+
+    return stateKey !== HybridStorageRepository.toStateKey({ technologies: [] });
+  }
+
   async load(): Promise<TrackerState> {
     let userId: string | null = null;
 
@@ -71,11 +137,27 @@ export class HybridStorageRepository implements StorageRepository {
       return this.localRepository.load();
     }
 
+    const localState = await this.localRepository.load();
+    const localStateKey = HybridStorageRepository.toStateKey(localState);
+    const localIsDirty = this.isDirtyLocalState(userId, localStateKey);
+
+    if (localIsDirty) {
+      this.lastSyncedStateKey = null;
+      this.clearPendingSync();
+      this.pendingCloudState = structuredClone(localState);
+      this.pendingStateKey = localStateKey;
+      this.pendingUserId = userId;
+      this.setSyncStatus("Syncing");
+      this.scheduleDebouncedCloudSync();
+      return localState;
+    }
+
     try {
       this.setSyncStatus("Syncing");
       const cloudState = await loadUserStateByUserId(userId);
       await this.localRepository.save(cloudState);
       this.lastSyncedStateKey = HybridStorageRepository.toStateKey(cloudState);
+      this.markSyncedState(userId, this.lastSyncedStateKey);
       this.pendingCloudState = null;
       this.pendingStateKey = null;
       this.pendingUserId = null;
@@ -108,8 +190,10 @@ export class HybridStorageRepository implements StorageRepository {
     }
 
     const stateKey = HybridStorageRepository.toStateKey(state);
+    this.markSavedState(userId, stateKey);
 
     if (stateKey === this.lastSyncedStateKey) {
+      this.markSyncedState(userId, stateKey);
       this.clearPendingSync();
       this.setSyncStatus("Synced");
       return;
@@ -220,6 +304,7 @@ export class HybridStorageRepository implements StorageRepository {
 
       if (snapshotVersion === this.pendingVersion && snapshotKey) {
         this.lastSyncedStateKey = snapshotKey;
+        this.markSyncedState(this.pendingUserId, snapshotKey);
         this.clearPendingSync();
         this.setSyncStatus("Synced");
       }
