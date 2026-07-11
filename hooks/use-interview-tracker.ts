@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 
+import { seedData } from "@/data/seed";
 import { DEFAULT_TOPIC_METADATA, STORAGE_KEY } from "@/lib/constants";
 import { generateId } from "@/lib/id";
-import { storageService } from "@/lib/storage-service";
-import { loadState, resetState, saveState } from "@/lib/storage";
+import { storageRepository } from "@/lib/repositories/local-storage-repository";
 import type {
   CreateSectionInput,
   CreateTechnologyInput,
@@ -54,14 +54,14 @@ export function useInterviewTracker() {
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    setState(loadState());
+    setState(storageRepository.load());
     setIsHydrated(true);
   }, []);
 
   const persist = useCallback((next: TrackerState | ((prev: TrackerState) => TrackerState)) => {
     setState((prev) => {
       const updated = next instanceof Function ? next(prev) : next;
-      saveState(updated);
+      storageRepository.save(updated);
       return updated;
     });
   }, []);
@@ -256,12 +256,14 @@ export function useInterviewTracker() {
   );
 
   const resetToSeed = useCallback(() => {
-    const fresh = resetState();
+    const fresh = structuredClone(seedData);
+
+    storageRepository.save(fresh);
     setState(fresh);
   }, []);
 
   const exportProgress = useCallback(() => {
-    void storageService.exportProgress().catch((error: unknown) => {
+    void storageRepository.export().catch((error: unknown) => {
       if (
         error instanceof DOMException &&
         error.name === "AbortError"
