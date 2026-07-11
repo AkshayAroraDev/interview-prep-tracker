@@ -3,6 +3,7 @@
 import { useCallback, useState, type ChangeEvent } from "react";
 
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
+import { useTracker } from "@/components/providers/tracker-provider";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,12 +20,24 @@ import {
   type ProgressExportPayload,
 } from "@/lib/storage-service";
 
+function getDateStamp(date = new Date()): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function getPreImportBackupFileName(date = new Date()): string {
+  return `interview-tracker-backup-${getDateStamp(date)}-before-restore.json`;
+}
+
 interface ImportBackupDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
 export function ImportBackupDialog({ open, onOpenChange }: ImportBackupDialogProps) {
+  const { importState, exportProgress } = useTracker();
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<BackupPreview | null>(null);
   const [payload, setPayload] = useState<ProgressExportPayload | null>(null);
@@ -80,15 +93,15 @@ export function ImportBackupDialog({ open, onOpenChange }: ImportBackupDialogPro
 
     try {
       setIsRestoring(true);
-      await storageService.restoreProgress(payload);
+      await exportProgress(getPreImportBackupFileName());
+      await importState(payload.data.tracker);
       handleClose(false);
-      window.location.reload();
     } catch (cause) {
       const message = cause instanceof Error ? cause.message : "Restore failed.";
       setError(message);
       setIsRestoring(false);
     }
-  }, [handleClose, isRestoring, payload]);
+  }, [exportProgress, handleClose, importState, isRestoring, payload]);
 
   return (
     <>
@@ -166,7 +179,7 @@ export function ImportBackupDialog({ open, onOpenChange }: ImportBackupDialogPro
         open={confirmRestoreOpen}
         onOpenChange={setConfirmRestoreOpen}
         title="Restore backup?"
-        description="Your current progress will be automatically exported and downloaded before restore. After restoring, the app will reload."
+        description="Your current progress will be automatically exported and downloaded before restore. After restoring, the app will update immediately."
         confirmLabel={isRestoring ? "Restoring..." : "Restore"}
         onConfirm={handleRestore}
       />
