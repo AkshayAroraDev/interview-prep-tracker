@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "exportedAt": "2026-06-30T18:16:02.498Z",
+  "exportedAt": "2026-07-11T10:55:57.715Z",
   "appVersion": "0.1.0",
   "data": {
     "tracker": {
@@ -57,10 +57,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-09T16:09:29.578Z"
                 },
                 {
                   "id": "76f50f25-a5a2-4502-8bd3-40002d9b32e7",
@@ -101,10 +101,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-09T16:09:32.786Z"
                 },
                 {
                   "id": "9227f4fb-f981-48be-abf7-d678c7fefc75",
@@ -186,10 +186,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-03T01:45:37.509Z"
                 },
                 {
                   "id": "a47bd052-19c7-40a0-a572-fba60287f314",
@@ -197,10 +197,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-03T01:45:38.184Z"
                 },
                 {
                   "id": "bc9ff399-66f1-4523-aefb-2b64ccbdb47d",
@@ -219,10 +219,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-03T01:45:40.914Z"
                 },
                 {
                   "id": "46e41c2f-2064-4bab-bd01-cb6048ffcb40",
@@ -230,10 +230,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-03T19:09:53.036Z"
                 },
                 {
                   "id": "cac0971f-90ac-40a8-8df5-595f7ebf8a7e",
@@ -241,10 +241,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-03T19:09:54.127Z"
                 },
                 {
                   "id": "83f7eb9b-3d4a-45f5-a24b-d93f0cebed01",
@@ -252,10 +252,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-03T19:09:54.877Z"
                 },
                 {
                   "id": "fb03ce15-49e6-4c64-8a69-4f319fc110c1",
@@ -274,10 +274,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-03T19:09:56.371Z"
                 },
                 {
                   "id": "fdbb9208-56ed-498f-aecb-58137eda0226",
@@ -285,10 +285,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-03T19:09:58.503Z"
                 }
               ]
             },
@@ -312,17 +312,6 @@
                 {
                   "id": "07a493ce-5736-4a92-b34d-7b9e267d67f5",
                   "title": "Routes",
-                  "interviewFrequency": "occasional",
-                  "confidence": "medium",
-                  "notes": "",
-                  "status": "not_started",
-                  "priority": "medium",
-                  "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
-                },
-                {
-                  "id": "99fba0be-5db8-444b-9305-a7886685afbd",
-                  "title": "Route",
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
@@ -490,10 +479,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-07T15:47:33.637Z"
                 },
                 {
                   "id": "4a381097-9788-453c-8d0d-285185c15c75",
@@ -553,10 +542,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-10T11:09:47.358Z"
                 },
                 {
                   "id": "1f2fa12b-4bca-481a-83df-b2a0eff4836c",
@@ -564,10 +553,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-10T11:09:46.898Z"
                 },
                 {
                   "id": "1c5bd2c1-afb4-4eca-873b-13012bc7be57",
@@ -575,10 +564,13 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-07T15:02:31.489Z",
+                  "resources": [
+                    "https://www.greatfrontend.com/questions/quiz/what-is-react-suspense-and-what-does-it-enable"
+                  ]
                 },
                 {
                   "id": "dc9f6def-24d8-40c4-b13f-3468da20390c",
@@ -586,10 +578,13 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-07T15:02:35.704Z",
+                  "resources": [
+                    "https://www.greatfrontend.com/questions/quiz/what-is-react-suspense-and-what-does-it-enable"
+                  ]
                 },
                 {
                   "id": "6d4c5641-a1e9-4a1a-b7d0-0bfca9c9e180",
@@ -597,10 +592,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-09T16:10:21.686Z"
                 },
                 {
                   "id": "5181dd3d-325c-4952-a086-07d721d648f9",
@@ -808,10 +803,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-10T11:10:02.431Z"
                 },
                 {
                   "id": "cb01ba73-b99e-4387-9ebc-46084c8d3f02",
@@ -819,10 +814,10 @@
                   "interviewFrequency": "occasional",
                   "confidence": "medium",
                   "notes": "",
-                  "status": "not_started",
+                  "status": "completed",
                   "priority": "medium",
                   "createdAt": "2026-06-27T13:14:14.611Z",
-                  "updatedAt": "2026-06-27T13:14:14.611Z"
+                  "updatedAt": "2026-07-10T11:10:03.396Z"
                 },
                 {
                   "id": "1d43a80a-0f6d-4bc0-9903-c18af63137f7",
@@ -4803,6 +4798,174 @@
                   "priority": "medium",
                   "createdAt": "2026-06-30T17:32:13.068Z",
                   "updatedAt": "2026-06-30T18:15:36.840Z"
+                },
+                {
+                  "id": "fc27256f-e6a8-4611-b337-e4e69ecb3205",
+                  "title": "Flatten",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/Flatten.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-01T14:23:41.871Z",
+                  "updatedAt": "2026-07-01T14:23:43.481Z"
+                },
+                {
+                  "id": "e62a64cf-4f24-499b-a910-de6d9a23953a",
+                  "title": "Deep Clone",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/Deep-clone.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-01T16:04:02.908Z",
+                  "updatedAt": "2026-07-01T16:04:03.889Z"
+                },
+                {
+                  "id": "50c91d00-5c43-4887-9ebf-cb95ffd9ccd1",
+                  "title": "Memoise",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/Memoise-function-closure.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-01T17:15:34.952Z",
+                  "updatedAt": "2026-07-01T17:15:36.598Z"
+                },
+                {
+                  "id": "aea21b5f-b4a7-4556-a736-165fd9e8e533",
+                  "title": "Promise.race",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/Promise-race.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-04T16:12:06.952Z",
+                  "updatedAt": "2026-07-04T16:12:08.527Z"
+                },
+                {
+                  "id": "4284c93c-b72f-43af-9f64-d8c076a7837c",
+                  "title": "Promise.all",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/Promise-all.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-04T16:12:33.239Z",
+                  "updatedAt": "2026-07-04T16:12:34.353Z"
+                },
+                {
+                  "id": "15a28593-3712-4fa5-a69b-32bf519a32bb",
+                  "title": "Promise.any",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/Promise-any.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-04T16:12:45.303Z",
+                  "updatedAt": "2026-07-04T16:12:48.050Z"
+                },
+                {
+                  "id": "e646e10e-5c83-4b59-8eab-6e97e74fc7ed",
+                  "title": "retry",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/Retry.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-04T16:23:00.506Z",
+                  "updatedAt": "2026-07-04T16:23:02.307Z"
+                },
+                {
+                  "id": "01646db0-e679-44f2-81f9-d3e28c353d98",
+                  "title": "Pub Sub",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/Pub-sub.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-05T14:43:20.010Z",
+                  "updatedAt": "2026-07-05T14:44:14.152Z"
+                },
+                {
+                  "id": "fe6b1e72-2c3d-4ce7-b925-e9b8363a82d4",
+                  "title": "Event Emitter",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/Event-emitter.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-05T14:44:26.036Z",
+                  "updatedAt": "2026-07-05T14:44:26.934Z"
+                },
+                {
+                  "id": "b0c765e0-4063-48a2-965d-944403c17ce9",
+                  "title": "Deep Equal",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/Deep-equal.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-09T17:53:50.812Z",
+                  "updatedAt": "2026-07-09T17:53:52.691Z"
+                },
+                {
+                  "id": "ae17291d-6106-48e7-a148-869f175ab1af",
+                  "title": "ClassNames",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/ClassNames.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-10T06:59:34.984Z",
+                  "updatedAt": "2026-07-10T06:59:36.927Z"
+                },
+                {
+                  "id": "1191ecf4-1866-4da5-a123-a56966c70f72",
+                  "title": "JSON Stringify",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/GFE%2075/JSONStringify.ts"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-10T06:59:59.217Z",
+                  "updatedAt": "2026-07-10T07:00:00.775Z"
                 }
               ]
             }
@@ -4857,13 +5020,6 @@
               "topics": []
             },
             {
-              "id": "ebdf08c1-f0df-4833-bd34-3d5ba7d7e4d7",
-              "technologyId": "13321279-871b-4379-8d19-e4be3ae18b9d",
-              "title": "Binary Search",
-              "description": "",
-              "topics": []
-            },
-            {
               "id": "e85eee18-db15-4793-a7ba-a97bbf4681f7",
               "technologyId": "13321279-871b-4379-8d19-e4be3ae18b9d",
               "title": "Trees",
@@ -4904,6 +5060,51 @@
               "title": "DP (important patterns only)",
               "description": "",
               "topics": []
+            },
+            {
+              "id": "a536c714-5f82-40ee-9202-dcf64cf90215",
+              "technologyId": "13321279-871b-4379-8d19-e4be3ae18b9d",
+              "title": "DS Implementation",
+              "description": "",
+              "topics": [
+                {
+                  "id": "dc7651c7-4fa8-4319-8256-da3478c0fc17",
+                  "title": "Searching Techniques",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/UtkarshBehre/AnalysisOfAlgorithms",
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/tree/main/Sorting"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-06T12:18:03.763Z",
+                  "updatedAt": "2026-07-06T12:18:33.281Z"
+                },
+                {
+                  "id": "031dc660-8a54-4b80-aed4-7e740c51c73e",
+                  "title": "Sorting Techniques",
+                  "interviewFrequency": "occasional",
+                  "confidence": "medium",
+                  "notes": "",
+                  "resources": [
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/Searching/binary-search.ts",
+                    "https://github.com/AkshayAroraDev/Data-Structure-Practice/blob/main/Searching/Binary%20search%20patterns.pdf"
+                  ],
+                  "status": "completed",
+                  "priority": "medium",
+                  "createdAt": "2026-07-06T12:18:08.656Z",
+                  "updatedAt": "2026-07-06T12:18:33.725Z"
+                }
+              ]
+            },
+            {
+              "id": "20d8a611-ca8a-4c66-8c30-1c9c5872969e",
+              "technologyId": "13321279-871b-4379-8d19-e4be3ae18b9d",
+              "title": "Binary Search",
+              "description": "",
+              "topics": []
             }
           ]
         }
@@ -4917,15 +5118,22 @@
       "removedSections": [
         "angular::testing",
         "dsa::stack",
-        "gfe 75::throttle"
+        "gfe 75::throttle",
+        "dsa::sorting",
+        "dsa::searching"
       ],
       "removedTopics": [
         "angular::fundamentals::angular architecture",
         "angular::fundamentals::cli",
-        "angular::fundamentals::templates"
+        "angular::fundamentals::templates",
+        "dsa::dp (important patterns only)::searching techniques",
+        "dsa::dp (important patterns only)::sorting techniques",
+        "react::routing::route"
       ]
     },
-    "settings": {},
+    "settings": {
+      "theme": "dark"
+    },
     "modules": {
       "flashCards": {
         "cards": []
