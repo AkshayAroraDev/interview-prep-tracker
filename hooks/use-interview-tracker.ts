@@ -6,6 +6,7 @@ import { seedData } from "@/data/seed";
 import { DEFAULT_TOPIC_METADATA, STORAGE_KEY } from "@/lib/constants";
 import { generateId } from "@/lib/id";
 import { storageRepository } from "@/lib/repositories/local-storage-repository";
+import { storageService } from "@/lib/storage-service";
 import type {
   CreateSectionInput,
   CreateTechnologyInput,
@@ -54,14 +55,34 @@ export function useInterviewTracker() {
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    setState(storageRepository.load());
-    setIsHydrated(true);
+    let isMounted = true;
+
+    void Promise.resolve(storageRepository.load())
+      .then((loadedState) => {
+        if (isMounted) {
+          setState(loadedState);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setState(structuredClone(seedData));
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsHydrated(true);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const persist = useCallback((next: TrackerState | ((prev: TrackerState) => TrackerState)) => {
     setState((prev) => {
       const updated = next instanceof Function ? next(prev) : next;
-      storageRepository.save(updated);
+      void Promise.resolve(storageRepository.save(updated));
       return updated;
     });
   }, []);
@@ -263,7 +284,7 @@ export function useInterviewTracker() {
   }, []);
 
   const exportProgress = useCallback(() => {
-    void storageRepository.export().catch((error: unknown) => {
+    void storageService.exportProgress().catch((error: unknown) => {
       if (
         error instanceof DOMException &&
         error.name === "AbortError"

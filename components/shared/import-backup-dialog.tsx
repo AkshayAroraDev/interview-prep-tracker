@@ -13,8 +13,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { storageRepository } from "@/lib/repositories/local-storage-repository";
 import {
+  storageService,
   type BackupPreview,
   type ProgressExportPayload,
 } from "@/lib/storage-service";
@@ -59,7 +59,7 @@ export function ImportBackupDialog({ open, onOpenChange }: ImportBackupDialogPro
     try {
       const content = await file.text();
       const { payload: nextPayload, preview: nextPreview } =
-        storageRepository.parseBackup(content);
+        storageService.parseBackupJson(content);
       setPayload(nextPayload);
       setPreview(nextPreview);
       setError(null);
@@ -80,7 +80,7 @@ export function ImportBackupDialog({ open, onOpenChange }: ImportBackupDialogPro
 
     try {
       setIsRestoring(true);
-      await storageRepository.restore(payload);
+      await storageService.restoreProgress(payload);
       handleClose(false);
       window.location.reload();
     } catch (cause) {
