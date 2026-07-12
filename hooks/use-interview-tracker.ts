@@ -116,6 +116,8 @@ export function useInterviewTracker() {
           return;
         }
 
+        // Avoid pushing fallback demo state when cloud load fails.
+        skipNextSaveRef.current = true;
         setState(structuredClone(seedData));
         setSyncStatus(typeof navigator !== "undefined" && navigator.onLine ? "Error" : "Offline");
       })
