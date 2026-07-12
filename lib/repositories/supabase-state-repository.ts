@@ -1,6 +1,5 @@
 import { seedData } from "@/data/seed";
 import { supabase } from "@/lib/supabase/client";
-import { getCurrentSession } from "@/lib/supabase/auth";
 import type { TrackerState } from "@/types";
 
 interface UserStateRow {
@@ -10,11 +9,6 @@ interface UserStateRow {
   created_at: string;
   updated_at: string;
 }
-
-type SupabaseRepositoryContract = {
-  load: () => Promise<TrackerState>;
-  save: (state: TrackerState) => Promise<void>;
-};
 
 function createInitialState(): TrackerState {
   return structuredClone(seedData);
@@ -26,17 +20,6 @@ function isTrackerState(value: unknown): value is TrackerState {
     value !== null &&
     Array.isArray((value as TrackerState).technologies)
   );
-}
-
-async function getAuthenticatedUserId(): Promise<string> {
-  const session = await getCurrentSession();
-  const user = session?.user;
-
-  if (!user) {
-    throw new Error("SupabaseRepository requires an authenticated user.");
-  }
-
-  return user.id;
 }
 
 async function fetchUserState(userId: string): Promise<UserStateRow | null> {
@@ -110,15 +93,3 @@ export async function saveUserStateByUserId(
     throw error;
   }
 }
-
-export const supabaseRepository: SupabaseRepositoryContract = {
-  async load(): Promise<TrackerState> {
-    const userId = await getAuthenticatedUserId();
-    return loadUserStateByUserId(userId);
-  },
-
-  async save(state: TrackerState): Promise<void> {
-    const userId = await getAuthenticatedUserId();
-    await saveUserStateByUserId(userId, state);
-  },
-};

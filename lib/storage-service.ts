@@ -99,14 +99,6 @@ function setItem(key: string, value: string): void {
   window.localStorage.setItem(key, value);
 }
 
-function removeItem(key: string): void {
-  if (!canUseStorage()) {
-    return;
-  }
-
-  window.localStorage.removeItem(key);
-}
-
 function getJson<T>(key: string): T | null {
   const raw = getItem(key);
   if (!raw) {
@@ -397,10 +389,6 @@ function getExportFileName(date = new Date()): string {
   return `interview-tracker-backup-${getDateStamp(date)}.json`;
 }
 
-function getPreRestoreBackupFileName(date = new Date()): string {
-  return `interview-tracker-backup-${getDateStamp(date)}-before-restore.json`;
-}
-
 function parseTrackerFromData(data: Record<string, unknown>): TrackerState {
   if (isRecord(data.tracker)) {
     return validateTracker(data.tracker, "data.tracker");
@@ -510,15 +498,14 @@ function parseBackupJson(json: string): ParsedBackupResult {
   return validateBackupPayload(parsed);
 }
 
-function createExportData(): ExportData {
-  const tracker = getJson<TrackerState>(STORAGE_KEY);
+function createExportData(trackerState: TrackerState): ExportData {
   const migrationMeta = getJson<MigrationMeta>(MIGRATION_META_KEY);
   const currentTheme = getItem(THEME_STORAGE_KEY);
 
   return {
     tracker:
-      tracker && Array.isArray(tracker.technologies)
-        ? tracker
+      trackerState && Array.isArray(trackerState.technologies)
+        ? structuredClone(trackerState)
         : {
             technologies: [],
           },
@@ -530,12 +517,12 @@ function createExportData(): ExportData {
   };
 }
 
-function createProgressExportPayload(): ProgressExportPayload {
+function createProgressExportPayload(trackerState: TrackerState): ProgressExportPayload {
   return {
     version: CURRENT_BACKUP_VERSION,
     exportedAt: new Date().toISOString(),
     appVersion: packageJson.version,
-    data: createExportData(),
+    data: createExportData(trackerState),
   };
 }
 
@@ -608,12 +595,12 @@ async function saveJsonWithNativeDialog(json: string, fileName: string): Promise
   await writable.close();
 }
 
-async function exportProgress(fileName?: string): Promise<void> {
+async function exportProgress(trackerState: TrackerState, fileName?: string): Promise<void> {
   if (!canUseStorage()) {
     return;
   }
 
-  const payload = createProgressExportPayload();
+  const payload = createProgressExportPayload(trackerState);
   const json = JSON.stringify(payload, null, 2);
   const resolvedFileName = fileName ?? getExportFileName();
 
@@ -623,61 +610,6 @@ async function exportProgress(fileName?: string): Promise<void> {
   }
 
   downloadJson(json, resolvedFileName);
-}
-
-async function restoreProgress(payload: ProgressExportPayload): Promise<void> {
-  if (!canUseStorage()) {
-    return;
-  }
-
-  const validated = validateBackupPayload(payload).payload;
-
-  const previousTracker = getItem(STORAGE_KEY);
-  const previousMigrationMeta = getItem(MIGRATION_META_KEY);
-  const previousTheme = getItem(THEME_STORAGE_KEY);
-
-  const hasThemeInBackup = validated.data.settings?.theme !== undefined;
-
-  await exportProgress(getPreRestoreBackupFileName());
-
-  try {
-    setJson(STORAGE_KEY, validated.data.tracker);
-    setJson(MIGRATION_META_KEY, normalizeMigrationMeta(validated.data.migrationMeta));
-
-    if (hasThemeInBackup) {
-      setItem(THEME_STORAGE_KEY, validated.data.settings.theme as string);
-    }
-  } catch (cause) {
-    try {
-      if (previousTracker === null) {
-        removeItem(STORAGE_KEY);
-      } else {
-        setItem(STORAGE_KEY, previousTracker);
-      }
-
-      if (previousMigrationMeta === null) {
-        removeItem(MIGRATION_META_KEY);
-      } else {
-        setItem(MIGRATION_META_KEY, previousMigrationMeta);
-      }
-
-      if (hasThemeInBackup) {
-        if (previousTheme === null) {
-          removeItem(THEME_STORAGE_KEY);
-        } else {
-          setItem(THEME_STORAGE_KEY, previousTheme);
-        }
-      }
-    } catch {
-      throw new Error("Restore failed and rollback could not complete.");
-    }
-
-    if (cause instanceof Error && cause.message) {
-      throw new Error(`Restore failed and changes were rolled back: ${cause.message}`);
-    }
-
-    throw new Error("Restore failed and changes were rolled back.");
-  }
 }
 
 function getThemeInitScript(): string {
@@ -695,7 +627,6 @@ function getThemeInitScript(): string {
 
 export const storageService = {
   keys: {
-    tracker: STORAGE_KEY,
     migrationMeta: MIGRATION_META_KEY,
     theme: THEME_STORAGE_KEY,
   },
@@ -705,6 +636,5 @@ export const storageService = {
   setJson,
   exportProgress,
   parseBackupJson,
-  restoreProgress,
   getThemeInitScript,
 } as const;

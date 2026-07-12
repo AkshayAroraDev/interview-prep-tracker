@@ -1,15 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useAuth } from "@/components/providers/auth-provider";
 import { seedData } from "@/data/seed";
-import { DEFAULT_TOPIC_METADATA, STORAGE_KEY } from "@/lib/constants";
+import { DEFAULT_TOPIC_METADATA } from "@/lib/constants";
 import { generateId } from "@/lib/id";
 import {
-  hybridStorageRepository,
-  storageRepository,
-  type SyncStatus,
-} from "@/lib/repositories/hybrid-storage-repository";
+  loadUserStateByUserId,
+  saveUserStateByUserId,
+} from "@/lib/repositories/supabase-state-repository";
 import { storageService } from "@/lib/storage-service";
 import type {
   CreateSectionInput,
@@ -24,19 +24,12 @@ import type {
   UpdateTopicInput,
 } from "@/types";
 
+const CLOUD_SYNC_DEBOUNCE_MS = 750;
+
+export type SyncStatus = "Synced" | "Syncing" | "Offline" | "Error";
+
 function now() {
   return new Date().toISOString();
-}
-
-function getDateStamp(date = new Date()): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function getPreImportBackupFileName(date = new Date()): string {
-  return `interview-tracker-backup-${getDateStamp(date)}-before-restore.json`;
 }
 
 function updateTechnology(
@@ -66,25 +59,65 @@ function updateSection(
 }
 
 export function useInterviewTracker() {
+  const { user, isLoading: isAuthLoading } = useAuth();
   const [state, setState] = useState<TrackerState>({ technologies: [] });
   const [isHydrated, setIsHydrated] = useState(false);
-  const [syncStatus, setSyncStatus] = useState<SyncStatus>(
-    hybridStorageRepository.getSyncStatus(),
-  );
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>("Offline");
+  const pendingSaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const skipNextSaveRef = useRef(false);
+  const saveVersionRef = useRef(0);
+
+  const clearPendingSave = useCallback(() => {
+    if (pendingSaveTimerRef.current) {
+      clearTimeout(pendingSaveTimerRef.current);
+      pendingSaveTimerRef.current = null;
+    }
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
 
-    void Promise.resolve(storageRepository.load())
+    clearPendingSave();
+    saveVersionRef.current += 1;
+
+    if (isAuthLoading) {
+      return () => {
+        isMounted = false;
+      };
+    }
+
+    if (!user) {
+      skipNextSaveRef.current = true;
+      setState(structuredClone(seedData));
+      setSyncStatus("Offline");
+      setIsHydrated(true);
+
+      return () => {
+        isMounted = false;
+      };
+    }
+
+    setIsHydrated(false);
+    setSyncStatus("Syncing");
+
+    void loadUserStateByUserId(user.id)
       .then((loadedState) => {
-        if (isMounted) {
-          setState(loadedState);
+        if (!isMounted) {
+          return;
         }
+
+        // Prevent immediately re-saving data loaded from Supabase.
+        skipNextSaveRef.current = true;
+        setState(loadedState);
+        setSyncStatus("Synced");
       })
       .catch(() => {
-        if (isMounted) {
-          setState(structuredClone(seedData));
+        if (!isMounted) {
+          return;
         }
+
+        setState(structuredClone(seedData));
+        setSyncStatus(typeof navigator !== "undefined" && navigator.onLine ? "Error" : "Offline");
       })
       .finally(() => {
         if (isMounted) {
@@ -95,16 +128,54 @@ export function useInterviewTracker() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [clearPendingSave, isAuthLoading, user]);
 
-  useEffect(() => hybridStorageRepository.subscribeSyncStatus(setSyncStatus), []);
+  useEffect(() => {
+    if (!isHydrated || isAuthLoading || !user) {
+      if (!user && !isAuthLoading) {
+        setSyncStatus("Offline");
+      }
+
+      return;
+    }
+
+    if (skipNextSaveRef.current) {
+      skipNextSaveRef.current = false;
+      return;
+    }
+
+    clearPendingSave();
+
+    const saveVersion = saveVersionRef.current + 1;
+    saveVersionRef.current = saveVersion;
+    const snapshot = structuredClone(state);
+    const userId = user.id;
+
+    setSyncStatus("Syncing");
+
+    pendingSaveTimerRef.current = setTimeout(() => {
+      pendingSaveTimerRef.current = null;
+
+      void saveUserStateByUserId(userId, snapshot)
+        .then(() => {
+          if (saveVersionRef.current === saveVersion) {
+            setSyncStatus("Synced");
+          }
+        })
+        .catch(() => {
+          if (saveVersionRef.current !== saveVersion) {
+            return;
+          }
+
+          setSyncStatus(typeof navigator !== "undefined" && navigator.onLine ? "Error" : "Offline");
+        });
+    }, CLOUD_SYNC_DEBOUNCE_MS);
+
+    return clearPendingSave;
+  }, [clearPendingSave, isAuthLoading, isHydrated, state, user]);
 
   const persist = useCallback((next: TrackerState | ((prev: TrackerState) => TrackerState)) => {
-    setState((prev) => {
-      const updated = next instanceof Function ? next(prev) : next;
-      void Promise.resolve(storageRepository.save(updated));
-      return updated;
-    });
+    setState((prev) => (next instanceof Function ? next(prev) : next));
   }, []);
 
   const addTechnology = useCallback(
@@ -128,28 +199,8 @@ export function useInterviewTracker() {
   );
 
   const importState = useCallback(async (nextState: TrackerState) => {
-    const previousState = state;
-
-    setState(nextState);
-
-    try {
-      await Promise.resolve(storageRepository.save(nextState));
-    } catch (cause) {
-      setState(previousState);
-
-      try {
-        await Promise.resolve(storageRepository.save(previousState));
-      } catch {
-        throw new Error("Import failed and rollback could not complete.");
-      }
-
-      if (cause instanceof Error && cause.message) {
-        throw new Error(`Import failed and changes were rolled back: ${cause.message}`);
-      }
-
-      throw new Error("Import failed and changes were rolled back.");
-    }
-  }, [state]);
+    persist(nextState);
+  }, [persist]);
 
   const updateTechnologyMeta = useCallback(
     (technologyId: string, input: Partial<CreateTechnologyInput>) => {
@@ -323,12 +374,11 @@ export function useInterviewTracker() {
   const resetToSeed = useCallback(() => {
     const fresh = structuredClone(seedData);
 
-    void storageRepository.save(fresh);
-    setState(fresh);
-  }, []);
+    persist(fresh);
+  }, [persist]);
 
   const exportProgress = useCallback((fileName?: string) => {
-    void storageService.exportProgress(fileName).catch((error: unknown) => {
+    void storageService.exportProgress(state, fileName).catch((error: unknown) => {
       if (
         error instanceof DOMException &&
         error.name === "AbortError"
@@ -338,13 +388,12 @@ export function useInterviewTracker() {
 
       throw error;
     });
-  }, []);
+  }, [state]);
 
   return {
     state,
     isHydrated,
     syncStatus,
-    storageKey: STORAGE_KEY,
     addTechnology,
     updateTechnologyMeta,
     deleteTechnology,
