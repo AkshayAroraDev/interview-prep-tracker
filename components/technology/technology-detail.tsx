@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
-import { notFound } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 
 import { ProgressCards } from "@/components/dashboard/progress-cards";
 import { useTracker } from "@/components/providers/tracker-provider";
@@ -20,6 +20,7 @@ interface TechnologyDetailProps {
 }
 
 export function TechnologyDetail({ technologyId }: TechnologyDetailProps) {
+  const router = useRouter();
   const { getTechnology, isHydrated, deleteTechnology } = useTracker();
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -102,7 +103,7 @@ export function TechnologyDetail({ technologyId }: TechnologyDetailProps) {
         description="This removes the technology and all nested sections and topics."
         onConfirm={() => {
           deleteTechnology(technology.id);
-          window.location.href = "/";
+          router.push("/");
         }}
       />
     </div>
