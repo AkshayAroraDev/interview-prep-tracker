@@ -38,7 +38,7 @@ export function SectionAccordion({ technology, sections }: SectionAccordionProps
   return (
     <Accordion
       defaultValue={defaultOpen}
-      className="rounded-xl border border-border/70 bg-card p-1"
+      className="rounded-xl border border-border/70 bg-card p-1.5"
     >
       {sections.map((section) => (
         <SectionAccordionItem
@@ -66,18 +66,18 @@ function SectionAccordionItem({
   const progress = getSectionProgress(section);
 
   return (
-    <AccordionItem value={section.id} className="rounded-lg border-border/70 px-3.5">
-      <div className="flex items-start gap-2 py-2">
-        <AccordionTrigger className="flex-1 py-3.5 hover:no-underline">
-          <div className="flex min-w-0 flex-1 flex-col gap-2.5 pr-4 text-left">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-sm font-semibold tracking-tight">{section.title}</span>
+    <AccordionItem value={section.id} className="rounded-lg border-border/70 px-4">
+      <div className="flex items-start gap-3 py-2.5">
+        <AccordionTrigger className="flex-1 py-4 hover:no-underline">
+          <div className="flex min-w-0 flex-1 flex-col gap-3 pr-4 text-left">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <span className="text-fluid-card-title font-semibold">{section.title}</span>
               <Badge variant="secondary" className="font-medium">
                 {progress.completed}/{progress.total}
               </Badge>
             </div>
             {section.description ? (
-              <p className="text-sm font-normal text-muted-foreground">
+              <p className="text-fluid-body font-normal text-muted-foreground">
                 {section.description}
               </p>
             ) : null}
@@ -96,7 +96,7 @@ function SectionAccordionItem({
               <Button
                 variant="ghost"
                 size="icon-sm"
-                className="mt-2 shrink-0 rounded-lg data-open:bg-muted"
+                  className="mt-2.5 shrink-0 rounded-lg data-open:bg-muted"
                 aria-label="Section actions"
               />
             }

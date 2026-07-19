@@ -36,13 +36,13 @@ export function Sidebar({ onNavigate, className }: SidebarProps) {
         className,
       )}
     >
-      <div className="flex items-center gap-3 px-4 py-5">
+      <div className="flex items-center gap-3 px-4 py-6">
         <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
           <GraduationCap className="size-4" />
         </div>
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold tracking-tight">Prep Tracker</p>
-          <p className="truncate text-xs text-muted-foreground/90">Interview study</p>
+          <p className="truncate text-fluid-label font-semibold tracking-tight">Prep Tracker</p>
+          <p className="truncate text-fluid-helper text-muted-foreground/90">Interview study</p>
         </div>
       </div>
 
@@ -58,7 +58,7 @@ export function Sidebar({ onNavigate, className }: SidebarProps) {
             onNavigate={onNavigate}
           />
 
-          <p className="px-2.5 pb-1.5 pt-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          <p className="px-2.5 pb-1.5 pt-4 text-fluid-helper font-semibold uppercase tracking-[0.12em] text-muted-foreground">
             Technologies
           </p>
 
@@ -72,7 +72,7 @@ export function Sidebar({ onNavigate, className }: SidebarProps) {
               ))}
             </div>
           ) : state.technologies.length === 0 ? (
-            <p className="px-2.5 py-2 text-xs text-muted-foreground">
+            <p className="px-2.5 py-2 text-fluid-helper text-muted-foreground">
               No technologies yet. Add one to get started.
             </p>
           ) : (
@@ -87,7 +87,7 @@ export function Sidebar({ onNavigate, className }: SidebarProps) {
                   href={href}
                   onClick={onNavigate}
                   className={cn(
-                    "group block w-full overflow-hidden rounded-lg border px-2.5 py-2.5 text-sm transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring/60 focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar",
+                    "group block w-full overflow-hidden rounded-lg border px-2.5 py-3 text-fluid-body transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring/60 focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar",
                     active
                       ? "border-sidebar-border bg-sidebar-accent text-sidebar-accent-foreground"
                       : "border-transparent text-sidebar-foreground/85 hover:border-sidebar-border/70 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
@@ -103,7 +103,7 @@ export function Sidebar({ onNavigate, className }: SidebarProps) {
                     </span>
                     <span
                       className={cn(
-                        "text-xs font-medium tabular-nums",
+                        "text-fluid-helper font-medium tabular-nums",
                         active
                           ? "text-sidebar-accent-foreground/80"
                           : "text-muted-foreground",
@@ -125,7 +125,7 @@ export function Sidebar({ onNavigate, className }: SidebarProps) {
         </nav>
       </ScrollArea>
 
-      <div className="space-y-2.5 border-t border-sidebar-border/90 p-3.5">
+      <div className="space-y-3 border-t border-sidebar-border/90 p-3.5">
         <Button
           className="w-full justify-start"
           size="sm"
@@ -195,7 +195,7 @@ function SidebarLink({
       href={href}
       onClick={onNavigate}
       className={cn(
-        "flex w-full items-center gap-2.5 overflow-hidden rounded-lg border px-2.5 py-2.5 text-sm transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring/60 focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar",
+        "flex w-full items-center gap-2.5 overflow-hidden rounded-lg border px-2.5 py-3 text-fluid-body transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring/60 focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar",
         active
           ? "border-sidebar-border bg-sidebar-accent text-sidebar-accent-foreground"
           : "border-transparent text-sidebar-foreground/85 hover:border-sidebar-border/70 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",

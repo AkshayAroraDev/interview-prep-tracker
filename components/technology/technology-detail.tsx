@@ -27,7 +27,7 @@ export function TechnologyDetail({ technologyId }: TechnologyDetailProps) {
 
   if (!isHydrated) {
     return (
-      <div className="mx-auto max-w-5xl px-4 py-7 md:px-8 md:py-10">
+      <div className="mx-auto max-w-5xl px-4 py-8 md:px-8 md:py-12">
         <div className="h-52 animate-pulse rounded-xl border border-border/70 bg-muted/30" />
       </div>
     );
@@ -41,20 +41,20 @@ export function TechnologyDetail({ technologyId }: TechnologyDetailProps) {
   const progress = getTechnologyProgress(technology);
 
   return (
-    <div className="mx-auto max-w-5xl space-y-10 px-4 py-7 md:px-8 md:py-10">
+    <div className="mx-auto max-w-5xl space-y-12 px-4 py-8 md:px-8 md:py-12">
       <header className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-        <div className="space-y-2.5">
+        <div className="space-y-3">
           <div className="flex items-center gap-3">
             <span
               className="size-3.5 shrink-0 rounded-full"
               style={{ backgroundColor: technology.color }}
             />
-            <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
+            <h1 className="text-fluid-page-title font-semibold">
               {technology.name}
             </h1>
           </div>
           {technology.description ? (
-            <p className="max-w-2xl text-sm text-muted-foreground md:text-[0.95rem]">
+            <p className="max-w-2xl text-fluid-body text-muted-foreground">
               {technology.description}
             </p>
           ) : null}
@@ -79,7 +79,7 @@ export function TechnologyDetail({ technologyId }: TechnologyDetailProps) {
       <ProgressCards technology={technology} />
 
       <Card className="border-border/70 bg-card shadow-none">
-        <CardContent className="p-5">
+        <CardContent className="p-6">
           <ProgressBar
             value={progress.percentage}
             label="Overall progress"

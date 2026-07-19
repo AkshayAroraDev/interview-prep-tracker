@@ -28,16 +28,16 @@ export function ProgressBar({
       }
     >
       {(label || showValue) && (
-        <div className="flex items-center justify-between gap-3 text-sm">
+        <div className="flex items-center justify-between gap-3 text-fluid-body">
           {label ? (
-            <span className="truncate text-[0.82rem] font-medium text-muted-foreground">
+            <span className="truncate text-fluid-helper font-medium text-muted-foreground">
               {label}
             </span>
           ) : (
             <span />
           )}
           {showValue ? (
-            <span className="text-[0.82rem] font-semibold tabular-nums">{clamped}%</span>
+            <span className="text-[0.9rem] font-semibold tabular-nums">{clamped}%</span>
           ) : null}
         </div>
       )}

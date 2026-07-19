@@ -4,6 +4,7 @@ import Script from "next/script";
 
 import { AppShell } from "@/components/layout/app-shell";
 import { storageService } from "@/lib/storage-service";
+import { AiAssistant } from "@/components/ai/AiAssistant";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { TrackerProvider } from "@/components/providers/tracker-provider";
@@ -51,6 +52,7 @@ export default function RootLayout({
             <TrackerProvider>
               <TooltipProvider>
                 <AppShell>{children}</AppShell>
+                <AiAssistant />
               </TooltipProvider>
             </TrackerProvider>
           </AuthProvider>

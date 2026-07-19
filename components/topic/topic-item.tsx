@@ -48,7 +48,7 @@ export function TopicItem({ technologyId, sectionId, topic }: TopicItemProps) {
   return (
     <div
       className={cn(
-        "group rounded-lg border border-transparent px-2.5 py-2.5 transition-colors duration-150",
+        "group rounded-lg border border-transparent px-3 py-3 transition-colors duration-150",
         "hover:border-border/60 hover:bg-muted/30",
       )}
     >
@@ -71,7 +71,7 @@ export function TopicItem({ technologyId, sectionId, topic }: TopicItemProps) {
               <div className="flex flex-wrap items-center gap-2">
                 <span
                   className={cn(
-                    "text-sm font-medium leading-snug",
+                    "text-fluid-body font-medium leading-snug",
                     isCompleted && "text-muted-foreground line-through",
                   )}
                 >
@@ -82,7 +82,7 @@ export function TopicItem({ technologyId, sectionId, topic }: TopicItemProps) {
                   {priority.label}
                 </Badge>
               </div>
-              <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground/90">
+              <div className="mt-2 flex flex-wrap items-center gap-1.5 text-fluid-helper text-muted-foreground/90">
                 <Badge variant="secondary" className="font-normal">
                   Frequency: {frequency.label}
                 </Badge>
@@ -141,9 +141,9 @@ export function TopicItem({ technologyId, sectionId, topic }: TopicItemProps) {
           </div>
 
           {expanded && hasDetails ? (
-            <div className="mt-2 space-y-2 animate-in fade-in duration-150">
+            <div className="mt-3 space-y-2 animate-in fade-in duration-150">
               {topic.notes ? (
-                <p className="text-xs leading-relaxed text-muted-foreground whitespace-pre-wrap">
+                <p className="whitespace-pre-wrap text-fluid-helper leading-relaxed text-muted-foreground">
                   {topic.notes}
                 </p>
               ) : null}
@@ -155,7 +155,7 @@ export function TopicItem({ technologyId, sectionId, topic }: TopicItemProps) {
                         href={resource.startsWith("http") ? resource : `https://${resource}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                        className="inline-flex items-center gap-1 text-fluid-helper text-primary hover:underline"
                       >
                         <ExternalLink className="size-3" />
                         {resource}

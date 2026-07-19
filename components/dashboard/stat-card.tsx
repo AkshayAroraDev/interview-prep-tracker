@@ -20,14 +20,14 @@ export function StatCard({
 }: StatCardProps) {
   return (
     <Card className="border-border/70 bg-card shadow-none transition-colors duration-150 hover:bg-card">
-      <CardContent className="flex min-h-[112px] items-start justify-between gap-4 p-5">
-        <div className="min-w-0 space-y-1.5">
-          <p className="text-xs font-medium text-muted-foreground">{label}</p>
-          <p className="text-[1.6rem] leading-none font-semibold tracking-tight tabular-nums">
+      <CardContent className="flex min-h-[124px] items-start justify-between gap-5 p-6">
+        <div className="min-w-0 space-y-2">
+          <p className="text-fluid-helper font-medium text-muted-foreground">{label}</p>
+          <p className="text-fluid-metric font-semibold tracking-tight tabular-nums">
             {value}
           </p>
           {hint ? (
-            <p className="truncate text-xs text-muted-foreground">{hint}</p>
+            <p className="truncate text-fluid-helper text-muted-foreground">{hint}</p>
           ) : null}
         </div>
         <div

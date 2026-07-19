@@ -32,10 +32,10 @@ export function TechnologyGrid() {
 
   return (
     <section className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-lg font-semibold">Technologies</h2>
-          <p className="text-sm text-muted-foreground">
+          <h2 className="text-fluid-section-heading font-semibold">Technologies</h2>
+          <p className="text-fluid-body text-muted-foreground">
             Track progress across stacks and domains.
           </p>
         </div>

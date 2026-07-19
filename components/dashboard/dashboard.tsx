@@ -14,30 +14,30 @@ export function Dashboard() {
   const { state, isHydrated } = useTracker();
 
   return (
-    <div className="mx-auto max-w-5xl space-y-10 px-4 py-7 md:px-8 md:py-10">
-      <header className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight md:text-[1.9rem]">Overview</h1>
-        <p className="max-w-2xl text-sm text-muted-foreground md:text-[0.95rem]">
+    <div className="mx-auto max-w-5xl space-y-12 px-4 py-8 md:px-8 md:py-12">
+      <header className="space-y-3">
+        <h1 className="text-fluid-page-title font-semibold">Overview</h1>
+        <p className="max-w-2xl text-fluid-body text-muted-foreground">
           Your interview prep at a glance. Select a technology from the sidebar to dive in.
         </p>
       </header>
 
       <ProgressCards />
 
-      <section className="space-y-5">
-        <div className="space-y-1">
-          <h2 className="text-base font-semibold tracking-tight">All technologies</h2>
-          <p className="text-sm text-muted-foreground">
+      <section className="space-y-6">
+        <div className="space-y-2">
+          <h2 className="text-fluid-section-heading font-semibold">All technologies</h2>
+          <p className="text-fluid-body text-muted-foreground">
             Quick snapshot of progress across each stack.
           </p>
         </div>
 
         {!isHydrated ? (
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2">
             {Array.from({ length: 3 }).map((_, index) => (
               <div
                 key={index}
-                className="h-36 animate-pulse rounded-xl border border-border/70 bg-muted/30"
+                className="h-40 animate-pulse rounded-xl border border-border/70 bg-muted/30"
               />
             ))}
           </div>
@@ -47,7 +47,7 @@ export function Dashboard() {
             description="Use the sidebar to add your first technology and start tracking topics."
           />
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2">
             {state.technologies.map((technology) => {
               const progress = getTechnologyProgress(technology);
 
@@ -65,14 +65,12 @@ export function Dashboard() {
                             className="size-3 shrink-0 rounded-full"
                             style={{ backgroundColor: technology.color }}
                           />
-                          <CardTitle className="text-base font-semibold tracking-tight">
-                            {technology.name}
-                          </CardTitle>
+                          <CardTitle>{technology.name}</CardTitle>
                         </div>
                         <ArrowRight className="size-4 text-muted-foreground transition-colors duration-150 group-hover:text-foreground" />
                       </div>
                       {technology.description ? (
-                        <p className="line-clamp-2 text-sm text-muted-foreground">
+                        <p className="line-clamp-2 text-fluid-body text-muted-foreground">
                           {technology.description}
                         </p>
                       ) : null}

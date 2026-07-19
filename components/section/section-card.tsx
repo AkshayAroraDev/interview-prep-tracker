@@ -37,12 +37,12 @@ export function SectionCard({ technology, section }: SectionCardProps) {
 
   return (
     <Card>
-      <CardHeader className="gap-4">
+      <CardHeader className="gap-5">
         <div className="flex items-start justify-between gap-3">
           <div className="space-y-2">
-            <CardTitle className="text-lg">{section.title}</CardTitle>
+            <CardTitle>{section.title}</CardTitle>
             {section.description ? (
-              <p className="text-sm text-muted-foreground">{section.description}</p>
+              <p className="text-fluid-body text-muted-foreground">{section.description}</p>
             ) : null}
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary">{progress.total} topics</Badge>
