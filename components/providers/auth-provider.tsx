@@ -61,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signInWithGoogle = useCallback(async () => {
     setIsActionPending(true);
     try {
-      await authSignInWithGoogle(typeof window !== "undefined" ? window.location.origin : undefined);
+      await authSignInWithGoogle(typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : undefined);
     } finally {
       setIsActionPending(false);
     }

@@ -1,5 +1,5 @@
 import { seedData } from "@/data/seed";
-import { supabase } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/browser";
 import type { TrackerState } from "@/types";
 
 interface UserStateRow {
@@ -42,6 +42,17 @@ async function fetchUserState(userId: string): Promise<UserStateRow | null> {
 
 async function insertInitialUserState(userId: string): Promise<TrackerState> {
   const initialState = createInitialState();
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  console.log("Authenticated user:", user);
+  console.log("Authenticated user id:", user?.id);
+  console.log("Insert user id:", userId);
+  console.log("Auth error:", authError);
+
 
   const { data, error } = await supabase
     .from("user_state")
