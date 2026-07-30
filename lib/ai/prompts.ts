@@ -1,9 +1,13 @@
-import type { TrackerState } from "@/types";
+import type { ChatMessage, TrackerState } from "@/types";
 
 /**
  * Builds a compact, personalized prompt optimized for low token usage.
  */
-export function buildPrompt(userState: TrackerState, userMessage: string): string {
+export function buildPrompt(
+  userState: TrackerState,
+  userMessage: string,
+  history?: ChatMessage[],
+): string {
   const technologies = userState.technologies ?? [];
   const sections = technologies.flatMap((tech) => tech.sections);
   const sectionCount = sections.length;
@@ -54,6 +58,11 @@ export function buildPrompt(userState: TrackerState, userMessage: string): strin
     )
     .join("\n");
 
+  const conversationHistory =
+    history && history.length > 0
+      ? history.map((message) => `${message.role === "user" ? "U" : "A"}: ${message.content}`).join("\n")
+      : "";
+
   return [
     "SYSTEM:",
     "You are an Interview Prep Assistant.",
@@ -63,6 +72,16 @@ export function buildPrompt(userState: TrackerState, userMessage: string): strin
     "- Prioritize next concrete study actions.",
     "- If helpful, include a tiny study plan (today/this week).",
     "- Avoid long explanations unless explicitly requested.",
+    "- Tracker Summary is the authoritative source of learning progress.",
+    "- Conversation History provides recent conversational context only.",
+    "- If they conflict, prefer Tracker Summary.",
+    ...(conversationHistory
+      ? [
+          "",
+          "CONVERSATION HISTORY:",
+          conversationHistory,
+        ]
+      : []),
     "",
     "TRACKER SUMMARY:",
     `- technologies=${technologies.length}, sections=${sectionCount}, topics=${allTopics.length}`,

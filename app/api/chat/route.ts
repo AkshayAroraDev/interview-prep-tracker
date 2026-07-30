@@ -3,10 +3,26 @@ import { NextResponse } from "next/server";
 import { generateResponse } from "@/lib/ai/gemini";
 import { buildPrompt } from "@/lib/ai/prompts";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import type { TrackerState } from "@/types";
+import type { ChatMessage, TrackerState } from "@/types";
 
 interface ChatRequestBody {
   message?: unknown;
+  history?: unknown;
+}
+
+function isChatMessageArray(value: unknown): value is ChatMessage[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (item) =>
+        !!item &&
+        typeof item === "object" &&
+        "role" in item &&
+        "content" in item &&
+        (item.role === "user" || item.role === "assistant") &&
+        typeof item.content === "string",
+    )
+  );
 }
 
 export async function POST(request: Request): Promise<Response> {
@@ -59,8 +75,17 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
+  if (body.history !== undefined && !isChatMessageArray(body.history)) {
+    return NextResponse.json(
+      { error: "Invalid input: history must be an array of chat messages." },
+      { status: 400 },
+    );
+  }
+
+  const history = body.history;
+
   try {
-    const prompt = buildPrompt(userState.state_json as TrackerState, message);
+    const prompt = buildPrompt(userState.state_json as TrackerState, message, history);
 
     // Delegate LLM generation to the reusable Gemini service.
     const response = await generateResponse(prompt);
