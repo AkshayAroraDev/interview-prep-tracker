@@ -8,6 +8,7 @@ import { useState } from "react";
 import { ImportBackupDialog } from "@/components/shared/import-backup-dialog";
 import { useTracker } from "@/components/providers/tracker-provider";
 import { TechnologyFormDialog } from "@/components/technology/technology-form-dialog";
+import { TechnologyIcon } from "@/components/technology/technology-icon";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -87,16 +88,16 @@ export function Sidebar({ onNavigate, className }: SidebarProps) {
                   href={href}
                   onClick={onNavigate}
                   className={cn(
-                    "group block w-full overflow-hidden rounded-lg border px-2.5 py-3 text-fluid-body transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring/60 focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar",
+                    "group block w-full overflow-hidden rounded-lg border px-2.5 py-3 text-fluid-body transition-all duration-200 ease-in-out motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring/60 focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar",
                     active
                       ? "border-sidebar-border bg-sidebar-accent text-sidebar-accent-foreground"
                       : "border-transparent text-sidebar-foreground/85 hover:border-sidebar-border/70 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
                   )}
                 >
                   <div className="flex items-center gap-2.5">
-                    <span
-                      className="size-2.5 shrink-0 rounded-full"
-                      style={{ backgroundColor: technology.color }}
+                    <TechnologyIcon
+                      technology={technology}
+                      className="text-sidebar-foreground/70"
                     />
                     <span className="min-w-0 flex-1 truncate font-medium">
                       {technology.name}
@@ -114,7 +115,7 @@ export function Sidebar({ onNavigate, className }: SidebarProps) {
                   </div>
                   <div className="mt-2 h-1 overflow-hidden rounded-full bg-sidebar-accent/90">
                     <div
-                      className="h-full rounded-full bg-sidebar-primary transition-all duration-150"
+                      className="h-full rounded-full bg-sidebar-primary transition-all duration-200 ease-in-out motion-reduce:transition-none"
                       style={{ width: `${progress.percentage}%` }}
                     />
                   </div>
@@ -195,7 +196,7 @@ function SidebarLink({
       href={href}
       onClick={onNavigate}
       className={cn(
-        "flex w-full items-center gap-2.5 overflow-hidden rounded-lg border px-2.5 py-3 text-fluid-body transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring/60 focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar",
+        "flex w-full items-center gap-2.5 overflow-hidden rounded-lg border px-2.5 py-3 text-fluid-body transition-all duration-200 ease-in-out motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring/60 focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar",
         active
           ? "border-sidebar-border bg-sidebar-accent text-sidebar-accent-foreground"
           : "border-transparent text-sidebar-foreground/85 hover:border-sidebar-border/70 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",

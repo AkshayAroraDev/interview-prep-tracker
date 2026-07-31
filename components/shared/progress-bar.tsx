@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +21,23 @@ export function ProgressBar({
   accentColor,
 }: ProgressBarProps) {
   const clamped = Math.min(100, Math.max(0, value));
+  const [animatedValue, setAnimatedValue] = useState(0);
+
+  useEffect(() => {
+    const reduceMotion =
+      typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reduceMotion) {
+      setAnimatedValue(clamped);
+      return;
+    }
+
+    const frame = requestAnimationFrame(() => {
+      setAnimatedValue(clamped);
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [clamped]);
 
   return (
     <div
@@ -42,9 +63,9 @@ export function ProgressBar({
         </div>
       )}
       <Progress
-        value={clamped}
+        value={animatedValue}
         className={cn(
-          "[&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:rounded-full [&_[data-slot=progress-track]]:bg-muted/70 [&_[data-slot=progress-indicator]]:rounded-full [&_[data-slot=progress-indicator]]:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.15)]",
+          "[&_[data-slot=progress-track]]:h-2 [&_[data-slot=progress-track]]:rounded-full [&_[data-slot=progress-track]]:bg-muted/70 [&_[data-slot=progress-indicator]]:rounded-full [&_[data-slot=progress-indicator]]:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.15)] motion-reduce:[&_[data-slot=progress-indicator]]:transition-none",
           accentColor
             ? "[&_[data-slot=progress-indicator]]:bg-[var(--progress-accent)]"
             : "[&_[data-slot=progress-indicator]]:bg-primary"

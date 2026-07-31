@@ -9,6 +9,7 @@ import { useTracker } from "@/components/providers/tracker-provider";
 import { ConfirmDialog } from "@/components/shared/confirm-dialog";
 import { ProgressBar } from "@/components/shared/progress-bar";
 import { SectionList } from "@/components/section/section-list";
+import { TechnologyIcon } from "@/components/technology/technology-icon";
 import { TechnologyFormDialog } from "@/components/technology/technology-form-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,9 +46,9 @@ export function TechnologyDetail({ technologyId }: TechnologyDetailProps) {
       <header className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-3">
           <div className="flex items-center gap-3">
-            <span
-              className="size-3.5 shrink-0 rounded-full"
-              style={{ backgroundColor: technology.color }}
+            <TechnologyIcon
+              technology={technology}
+              className="text-muted-foreground"
             />
             <h1 className="text-fluid-page-title font-semibold">
               {technology.name}

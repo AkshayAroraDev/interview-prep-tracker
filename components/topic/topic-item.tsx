@@ -69,12 +69,7 @@ export function TopicItem({ technologyId, sectionId, topic }: TopicItemProps) {
               disabled={!hasDetails}
             >
               <div className="flex flex-wrap items-center gap-2">
-                <span
-                  className={cn(
-                    "text-fluid-body font-medium leading-snug",
-                    isCompleted && "text-muted-foreground line-through",
-                  )}
-                >
+                <span className="text-fluid-body font-medium leading-snug">
                   {topic.title}
                 </span>
                 <StatusBadge status={topic.status} />
