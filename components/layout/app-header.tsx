@@ -27,26 +27,24 @@ export function AppHeader({
         className,
       )}
     >
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <div className="space-y-1">
+      <div className="mx-auto flex max-w-6xl flex-col gap-5 px-4 py-8 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-10">
+        <div className="space-y-2">
           {backHref ? (
             <Link
               href={backHref}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className="text-fluid-helper text-muted-foreground transition-colors hover:text-foreground"
             >
               ← {backLabel}
             </Link>
           ) : (
-            <div className="flex items-center gap-2 text-sm font-medium text-primary">
+            <div className="flex items-center gap-2 text-fluid-helper font-medium text-primary">
               <GraduationCap className="size-4" />
               <span>Study smarter, interview better</span>
             </div>
           )}
-          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            {title}
-          </h1>
+          <h1 className="text-fluid-page-title font-semibold">{title}</h1>
           {description ? (
-            <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
+            <p className="max-w-2xl text-fluid-body text-muted-foreground">
               {description}
             </p>
           ) : null}

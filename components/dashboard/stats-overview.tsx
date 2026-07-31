@@ -64,7 +64,7 @@ export function StatsOverview() {
 
 export function EmptyProgressHint() {
   return (
-    <div className="flex items-center gap-2 rounded-lg border border-dashed px-4 py-3 text-sm text-muted-foreground">
+    <div className="flex items-center gap-2 rounded-lg border border-dashed px-4 py-3 text-fluid-body text-muted-foreground">
       <CircleDashed className="size-4 shrink-0" />
       Add technologies and topics to start tracking your interview prep.
     </div>

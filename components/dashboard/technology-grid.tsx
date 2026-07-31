@@ -19,7 +19,7 @@ export function TechnologyGrid() {
 
   if (!isHydrated) {
     return (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 3 }).map((_, index) => (
           <div
             key={index}
@@ -31,15 +31,15 @@ export function TechnologyGrid() {
   }
 
   return (
-    <section className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-lg font-semibold">Technologies</h2>
-          <p className="text-sm text-muted-foreground">
+    <section className="space-y-8">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+        <div className="space-y-2 pt-2 pb-4">
+          <h2 className="text-fluid-section-heading font-semibold">Technologies</h2>
+          <p className="text-fluid-body text-muted-foreground">
             Track progress across stacks and domains.
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 sm:pt-2">
           <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
             <Upload className="size-4" />
             Import backup
@@ -71,7 +71,7 @@ export function TechnologyGrid() {
           }
         />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {state.technologies.map((technology) => (
             <TechnologyCard key={technology.id} technology={technology} />
           ))}

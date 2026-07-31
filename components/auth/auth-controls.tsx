@@ -111,7 +111,7 @@ export function AuthControls({ className }: { className?: string }) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <div className="flex items-center gap-2 rounded-lg border border-border/70 bg-card px-2 py-1">
-        <div className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted text-xs font-semibold text-foreground">
+        <div className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted text-fluid-helper font-semibold text-foreground">
           <span
             className={cn(
               "absolute inset-0 flex items-center justify-center transition-opacity duration-150",
@@ -140,8 +140,8 @@ export function AuthControls({ className }: { className?: string }) {
           ) : null}
         </div>
         <div className="hidden max-w-[180px] sm:block">
-          <p className="truncate text-sm font-medium leading-none">{displayName ?? "Signed in user"}</p>
-          <p className="truncate text-xs text-muted-foreground">{email ?? "No email available"}</p>
+          <p className="truncate text-fluid-label font-medium leading-none">{displayName ?? "Signed in user"}</p>
+          <p className="truncate text-fluid-helper text-muted-foreground">{email ?? "No email available"}</p>
         </div>
       </div>
 

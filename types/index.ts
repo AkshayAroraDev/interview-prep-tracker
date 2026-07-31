@@ -40,6 +40,11 @@ export interface TrackerState {
   technologies: Technology[];
 }
 
+export interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
 export interface ProgressStats {
   total: number;
   completed: number;
