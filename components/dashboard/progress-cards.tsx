@@ -27,9 +27,31 @@ export function ProgressCards({ technology }: ProgressCardsProps) {
     : getOverallStats(state);
   const [animatedStats, setAnimatedStats] = useState(stats);
   const previousStatsRef = useRef(stats);
+  const {
+    total,
+    completed,
+    inProgress,
+    needsReview,
+    notStarted,
+    percentage,
+  } = stats;
 
   useEffect(() => {
     if (!isHydrated) {
+      return;
+    }
+
+    const previous = previousStatsRef.current;
+
+    // Don't restart the animation if the values haven't changed.
+    if (
+      previous.total === stats.total &&
+      previous.completed === stats.completed &&
+      previous.inProgress === stats.inProgress &&
+      previous.needsReview === stats.needsReview &&
+      previous.notStarted === stats.notStarted &&
+      previous.percentage === stats.percentage
+    ) {
       return;
     }
 
@@ -37,14 +59,17 @@ export function ProgressCards({ technology }: ProgressCardsProps) {
       typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (reduceMotion) {
-      setAnimatedStats(stats);
       previousStatsRef.current = stats;
+      setAnimatedStats(stats);
       return;
     }
 
     const duration = 550;
     const start = performance.now();
-    const from = { ...previousStatsRef.current };
+    const from = { ...previous };
+
+    // Mark the new values immediately so re-renders don't restart the animation.
+    previousStatsRef.current = stats;
 
     let raf = 0;
     const tick = (time: number) => {
@@ -52,24 +77,31 @@ export function ProgressCards({ technology }: ProgressCardsProps) {
       const eased = 1 - Math.pow(1 - progressRatio, 3);
 
       setAnimatedStats({
-        total: Math.round(from.total + (stats.total - from.total) * eased),
-        completed: Math.round(from.completed + (stats.completed - from.completed) * eased),
-        inProgress: Math.round(from.inProgress + (stats.inProgress - from.inProgress) * eased),
-        needsReview: Math.round(from.needsReview + (stats.needsReview - from.needsReview) * eased),
-        notStarted: Math.round(from.notStarted + (stats.notStarted - from.notStarted) * eased),
-        percentage: Math.round(from.percentage + (stats.percentage - from.percentage) * eased),
+        total: Math.round(from.total + (total - from.total) * eased),
+        completed: Math.round(from.completed + (completed - from.completed) * eased),
+        inProgress: Math.round(from.inProgress + (inProgress - from.inProgress) * eased),
+        needsReview: Math.round(from.needsReview + (needsReview - from.needsReview) * eased),
+        notStarted: Math.round(from.notStarted + (notStarted - from.notStarted) * eased),
+        percentage: Math.round(from.percentage + (percentage - from.percentage) * eased),
       });
 
       if (progressRatio < 1) {
         raf = requestAnimationFrame(tick);
-      } else {
-        previousStatsRef.current = stats;
       }
     };
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [isHydrated, stats]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    isHydrated,
+    total,
+    completed,
+    inProgress,
+    needsReview,
+    notStarted,
+    percentage,
+  ]);
 
   const cards = useMemo(
     () => [
