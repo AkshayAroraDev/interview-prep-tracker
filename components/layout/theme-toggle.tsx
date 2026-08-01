@@ -22,7 +22,7 @@ export function ThemeToggle() {
             size="icon-sm"
             onClick={toggleTheme}
             aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-            className="relative"
+            className="relative rounded-xl border border-border/70 bg-card/70 text-foreground/90 hover:bg-muted/70 hover:text-foreground"
           >
             <Sun className="size-4 rotate-0 scale-100 transition-transform duration-200 dark:-rotate-90 dark:scale-0" />
             <Moon className="absolute size-4 rotate-90 scale-0 transition-transform duration-200 dark:rotate-0 dark:scale-100" />

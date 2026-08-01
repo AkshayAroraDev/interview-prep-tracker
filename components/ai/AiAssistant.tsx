@@ -2,16 +2,19 @@
 
 import {
   Bot,
+  ChevronsDown,
   Loader2,
   Maximize2,
   MessageSquareText,
   Minimize2,
   SendHorizontal,
   Sparkles,
+  X,
 } from "lucide-react";
 import { ChangeEvent, FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
+import { AiRobotIcon } from "@/components/ai/ai-robot-icon";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -184,181 +187,206 @@ export function AiAssistant() {
   };
 
   return (
-    <div className="pointer-events-none fixed right-4 bottom-4 z-50 flex flex-col items-end gap-3 sm:right-6 sm:bottom-6">
-      {isOpen ? (
-        <Card
-          className={`pointer-events-auto border-border/80 bg-card/95 shadow-xl backdrop-blur-sm ${
-            isMaximized
-              ? "h-[75vh] w-[min(94vw,70vw)]"
-              : "h-[70vh] w-[min(94vw,700px)] max-sm:h-[78vh]"
-          }`}
-        >
-          <CardHeader className="border-b border-border/70 pb-4">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex min-w-0 items-start gap-3">
-                <div className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-primary/10 text-primary">
-                  <Bot className="size-5" />
-                </div>
-                <div className="space-y-1">
-                  <CardTitle className="text-lg font-semibold tracking-tight">AI Study Assistant</CardTitle>
-                  <div className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-muted/40 px-2 py-0.5 text-[0.72rem] font-medium text-muted-foreground">
-                    <Sparkles className="size-3" />
-                    Powered by Gemini
-                  </div>
+    <div className="pointer-events-none fixed right-4 bottom-4 z-50 flex flex-col items-end gap-2.5 sm:right-6 sm:bottom-6">
+      <Card
+        aria-hidden={!isOpen}
+        className={`pointer-events-auto flex origin-bottom-right flex-col overflow-hidden border-border/70 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--card),white_3%)_0%,var(--card)_100%)] shadow-[0_28px_70px_-42px_black] transition-[transform,opacity,width,height] duration-240 ease-out ${
+          isMaximized
+            ? "h-[76vh] w-[min(95vw,72vw)]"
+            : "h-[72vh] w-[min(95vw,25rem)] sm:w-[min(92vw,27rem)]"
+        } ${isOpen ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none translate-y-3 scale-95 opacity-0"}`}
+      >
+        <CardHeader className="border-b border-border/70 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--muted),transparent_72%)_0%,transparent_100%)] px-4 pb-3 pt-3.5">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex min-w-0 items-start gap-3">
+              <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-[linear-gradient(140deg,color-mix(in_oklch,var(--primary),transparent_78%)_0%,color-mix(in_oklch,var(--primary),transparent_88%)_100%)] text-primary shadow-[0_10px_18px_-14px_color-mix(in_oklch,var(--primary),transparent_40%)]">
+                <Bot className="size-[1.125rem]" />
+              </div>
+              <div className="min-w-0 space-y-0.5">
+                <CardTitle className="truncate text-[0.96rem] font-semibold tracking-tight text-foreground">
+                  AI Study Assistant
+                </CardTitle>
+                <div className="inline-flex items-center gap-1 rounded-full border border-border/70 bg-background/45 px-2 py-0.5 text-[0.69rem] font-medium text-muted-foreground">
+                  <Sparkles className="size-3" />
+                  Copilot mode
                 </div>
               </div>
+            </div>
+
+            <div className="flex items-center gap-1">
               <Button
                 type="button"
                 nativeButton
                 variant="ghost"
                 size="icon-sm"
+                className="rounded-lg text-muted-foreground hover:bg-muted/70 hover:text-foreground"
                 onClick={() => setIsMaximized((current) => !current)}
                 aria-label={isMaximized ? "Restore panel size" : "Maximize panel"}
               >
                 {isMaximized ? <Minimize2 className="size-4" /> : <Maximize2 className="size-4" />}
               </Button>
+              <Button
+                type="button"
+                nativeButton
+                variant="ghost"
+                size="icon-sm"
+                className="rounded-lg text-muted-foreground hover:bg-muted/70 hover:text-foreground"
+                onClick={() => setIsOpen(false)}
+                aria-label="Close AI assistant"
+              >
+                <X className="size-4" />
+              </Button>
             </div>
-          </CardHeader>
+          </div>
+        </CardHeader>
 
-          <CardContent className="flex min-h-0 flex-1 flex-col gap-4 pt-4">
-            {/* Chat history is local to this component only (no persistence). */}
-            <ScrollArea className="min-h-0 flex-1 rounded-xl border border-border/70 bg-muted/15 p-0">
-              <div className="space-y-4 p-4 sm:p-5">
-                {messages.length === 0 ? (
-                  <div className="space-y-6">
-                    <div className="space-y-3 rounded-xl border border-border/60 bg-background/40 p-5">
-                      <div className="flex items-center gap-3">
-                        <div className="flex size-11 shrink-0 items-center justify-center rounded-xl border border-border/70 bg-muted/40">
-                          <Sparkles className="size-5 text-primary" />
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-base font-medium text-foreground">
-                            Welcome to your AI study copilot
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            Ask for explanations, quick quizzes, revision plans, or interview-style questions tailored to your roadmap.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <p className="text-xs font-semibold tracking-[0.08em] text-muted-foreground uppercase">
-                        Suggested prompts
-                      </p>
-                      <div className="grid gap-2.5 sm:grid-cols-2">
-                        {STARTER_PROMPTS.map(({ prompt: starterPrompt, title, icon: Icon }) => (
-                          <button
-                            key={starterPrompt}
-                            type="button"
-                            className="group flex w-full cursor-pointer items-start gap-3 rounded-xl border border-border/70 bg-background/50 p-3 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-border hover:bg-background/70"
-                            onClick={() => handleStarterPrompt(starterPrompt)}
-                          >
-                            <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border border-border/70 bg-muted/40 text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
-                              <Icon className="size-4" />
-                            </span>
-                            <span className="min-w-0 space-y-0.5">
-                              <span className="block text-[0.72rem] font-medium tracking-wide text-muted-foreground uppercase">
-                                {title}
-                              </span>
-                              <span className="block text-sm text-foreground">{starterPrompt}</span>
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  messages.map((message, index) => (
-                    <div
-                      key={`${message.role}-${index}`}
-                      className={`animate-in fade-in duration-200 ${
-                        message.role === "user" ? "flex justify-end" : "flex justify-start"
-                      }`}
-                    >
-                      <div
-                        className={
-                          message.role === "user"
-                            ? "max-w-[86%] rounded-2xl rounded-br-md bg-primary px-3.5 py-2.5 text-sm text-primary-foreground shadow-sm"
-                            : "max-w-[90%] rounded-2xl rounded-bl-md border border-border/60 bg-background/70 px-3.5 py-2.5 text-sm text-foreground"
-                        }
-                      >
-                        {message.role === "assistant" ? (
-                          <div className="space-y-2 leading-relaxed">
-                            <ReactMarkdown
-                              components={{
-                                p: ({ children }) => <p className="my-2">{children}</p>,
-                                ul: ({ children }) => <ul className="my-2 list-disc pl-5">{children}</ul>,
-                                ol: ({ children }) => <ol className="my-2 list-decimal pl-5">{children}</ol>,
-                                li: ({ children }) => <li className="my-1">{children}</li>,
-                                code: ({ children }) => (
-                                  <code className="rounded bg-muted px-1 py-0.5 text-[0.85em]">{children}</code>
-                                ),
-                                pre: ({ children }) => (
-                                  <pre className="overflow-x-auto rounded-lg bg-muted/70 p-2">{children}</pre>
-                                ),
-                              }}
-                            >
-                              {message.content}
-                            </ReactMarkdown>
-                          </div>
-                        ) : (
-                          <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
-                        )}
-
-                        <p
-                          className={
-                            message.role === "user"
-                              ? "mt-2 text-right text-[0.68rem] text-primary-foreground/70"
-                              : "mt-2 text-[0.68rem] text-muted-foreground"
-                          }
-                        >
-                          {formatTimeLabel(message.createdAt)}
+        <CardContent className="flex min-h-0 flex-1 flex-col gap-3.5 px-3.5 pb-3.5 pt-3">
+          <ScrollArea className="min-h-0 flex-1 rounded-2xl border border-border/65 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--muted),transparent_88%)_0%,transparent_100%)]">
+            <div className="space-y-4 p-3.5 sm:p-4">
+              {messages.length === 0 ? (
+                <div className="space-y-4">
+                  <div className="relative overflow-hidden rounded-2xl border border-border/70 bg-[linear-gradient(135deg,color-mix(in_oklch,var(--primary),transparent_88%)_0%,color-mix(in_oklch,var(--primary),transparent_95%)_46%,transparent_100%)] p-4">
+                    <div className="pointer-events-none absolute -top-7 -right-7 size-18 rounded-full bg-primary/10 blur-xl" />
+                    <div className="flex items-start gap-3">
+                      <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-xl border border-border/65 bg-background/55 text-primary">
+                        <Sparkles className="size-[1.125rem]" />
+                      </span>
+                      <div className="space-y-1">
+                        <p className="text-sm font-semibold tracking-tight text-foreground">
+                          Your personal interview copilot
+                        </p>
+                        <p className="text-[0.82rem] leading-relaxed text-muted-foreground">
+                          Ask for concise explanations, mock interview questions, and revision guidance based on your roadmap.
                         </p>
                       </div>
                     </div>
-                  ))
-                )}
+                  </div>
 
-                {isLoading ? (
-                  <div className="animate-in fade-in flex items-start gap-2.5 duration-200">
-                    <div className="rounded-2xl rounded-bl-md border border-border/60 bg-background/70 px-3.5 py-2.5">
-                      <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
-                        <Loader2 className="size-3.5 animate-spin" />
-                        Gemini is typing...
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground/70" />
-                        <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground/70 [animation-delay:120ms]" />
-                        <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground/70 [animation-delay:240ms]" />
-                      </div>
+                  <div className="space-y-2">
+                    <p className="px-0.5 text-[0.66rem] font-semibold uppercase tracking-[0.13em] text-muted-foreground">
+                      Suggested prompts
+                    </p>
+                    <div className="grid gap-2">
+                      {STARTER_PROMPTS.map(({ prompt: starterPrompt, title, icon: Icon }) => (
+                        <button
+                          key={starterPrompt}
+                          type="button"
+                          className="group flex w-full items-start gap-2.5 rounded-xl border border-border/70 bg-background/55 p-2.5 text-left transition-[transform,border-color,background-color] duration-220 ease-out hover:-translate-y-0.5 hover:border-border hover:bg-background/80"
+                          onClick={() => handleStarterPrompt(starterPrompt)}
+                        >
+                          <span className="mt-0.5 flex size-[1.875rem] shrink-0 items-center justify-center rounded-lg border border-border/70 bg-muted/35 text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
+                            <Icon className="size-3.5" />
+                          </span>
+                          <span className="min-w-0 space-y-0.5">
+                            <span className="block text-[0.64rem] font-semibold uppercase tracking-[0.11em] text-muted-foreground">
+                              {title}
+                            </span>
+                            <span className="block text-[0.82rem] leading-snug text-foreground">
+                              {starterPrompt}
+                            </span>
+                          </span>
+                        </button>
+                      ))}
                     </div>
                   </div>
-                ) : null}
+                </div>
+              ) : (
+                messages.map((message, index) => (
+                  <div
+                    key={`${message.role}-${index}`}
+                    className={`animate-in fade-in duration-200 ${
+                      message.role === "user" ? "flex justify-end" : "flex justify-start"
+                    }`}
+                  >
+                    <div
+                      className={
+                        message.role === "user"
+                          ? "max-w-[86%] rounded-2xl rounded-br-md bg-[linear-gradient(135deg,color-mix(in_oklch,var(--primary),white_4%)_0%,var(--primary)_100%)] px-3.5 py-2.5 text-[0.84rem] text-primary-foreground shadow-[0_12px_24px_-18px_color-mix(in_oklch,var(--primary),transparent_20%)]"
+                          : "max-w-[90%] rounded-2xl rounded-bl-md border border-border/65 bg-background/70 px-3.5 py-2.5 text-[0.84rem] text-foreground"
+                      }
+                    >
+                      {message.role === "assistant" ? (
+                        <div className="space-y-2 leading-relaxed">
+                          <ReactMarkdown
+                            components={{
+                              p: ({ children }) => <p className="my-2">{children}</p>,
+                              ul: ({ children }) => <ul className="my-2 list-disc pl-5">{children}</ul>,
+                              ol: ({ children }) => <ol className="my-2 list-decimal pl-5">{children}</ol>,
+                              li: ({ children }) => <li className="my-1">{children}</li>,
+                              code: ({ children }) => (
+                                <code className="rounded-md bg-muted px-1 py-0.5 text-[0.82em]">{children}</code>
+                              ),
+                              pre: ({ children }) => (
+                                <pre className="overflow-x-auto rounded-lg border border-border/60 bg-muted/60 p-2">
+                                  {children}
+                                </pre>
+                              ),
+                            }}
+                          >
+                            {message.content}
+                          </ReactMarkdown>
+                        </div>
+                      ) : (
+                        <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                      )}
 
-                {error ? (
-                  <p className="animate-in fade-in rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive duration-200">
-                    {error}
-                  </p>
-                ) : null}
+                      <p
+                        className={
+                          message.role === "user"
+                            ? "mt-2 text-right text-[0.64rem] text-primary-foreground/75"
+                            : "mt-2 text-[0.64rem] text-muted-foreground"
+                        }
+                      >
+                        {formatTimeLabel(message.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              )}
 
-                <div ref={messagesEndRef} />
-              </div>
-            </ScrollArea>
+              {isLoading ? (
+                <div className="animate-in fade-in flex items-start gap-2 duration-200">
+                  <div className="rounded-2xl rounded-bl-md border border-border/65 bg-background/70 px-3 py-2.5">
+                    <div className="mb-1.5 flex items-center gap-1.5 text-[0.7rem] font-medium text-muted-foreground">
+                      <Loader2 className="size-3 animate-spin" />
+                      Assistant is typing
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground/70" />
+                      <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground/70 [animation-delay:120ms]" />
+                      <span className="size-1.5 animate-pulse rounded-full bg-muted-foreground/70 [animation-delay:240ms]" />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
 
-            {/* Minimal prompt form with Enter-to-send behavior. */}
-            <form onSubmit={handleSubmit} className="mt-auto border-t border-border/70 pt-4">
-              <div className="relative">
-                <Textarea
-                  ref={composerRef}
-                  value={prompt}
-                  onChange={handlePromptChange}
-                  onKeyDown={handlePromptKeyDown}
-                  placeholder="Ask about any interview topic..."
-                  className="h-16 resize-none rounded-xl border-border/80 bg-background/60 pr-20 pb-12 placeholder:text-[0.95rem] placeholder:text-muted-foreground/80 transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ring/60"
-                  disabled={isLoading}
-                  aria-label="Prompt for AI Study Assistant"
-                />
+              {error ? (
+                <p className="animate-in fade-in rounded-xl border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive duration-200">
+                  {error}
+                </p>
+              ) : null}
+
+              <div ref={messagesEndRef} />
+            </div>
+          </ScrollArea>
+
+          <form onSubmit={handleSubmit} className="mt-auto border-t border-border/70 pt-3">
+            <div className="relative rounded-2xl border border-border/70 bg-background/70 p-2 shadow-[0_12px_24px_-24px_black]">
+              <Textarea
+                ref={composerRef}
+                value={prompt}
+                onChange={handlePromptChange}
+                onKeyDown={handlePromptKeyDown}
+                placeholder="Ask anything about your prep plan..."
+                className="h-14 resize-none border-0 bg-transparent px-2 pt-2 pb-12 text-[0.86rem] placeholder:text-muted-foreground/85 focus-visible:ring-0"
+                disabled={isLoading}
+                aria-label="Prompt for AI Study Assistant"
+              />
+
+              <div className="pointer-events-none absolute right-2 bottom-2 left-2 flex items-center justify-between">
+                <span className="rounded-full border border-border/60 bg-muted/35 px-2 py-0.5 text-[0.64rem] font-medium text-muted-foreground">
+                  Enter to send, Shift+Enter for new line
+                </span>
 
                 <Button
                   type="submit"
@@ -366,27 +394,40 @@ export function AiAssistant() {
                   size="sm"
                   aria-label="Send prompt"
                   disabled={isLoading || prompt.trim().length === 0}
-                  className="absolute right-2 bottom-2 rounded-lg px-2.5 shadow-sm transition-all duration-200 hover:bg-primary/90"
+                  className="pointer-events-auto rounded-lg px-2.5 shadow-sm transition-[background-color,box-shadow] duration-220 hover:bg-primary/90"
                 >
                   <SendHorizontal className="size-3.5" />
                   Send
                 </Button>
               </div>
-            </form>
-          </CardContent>
-        </Card>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      {!isOpen ? (
+        <span className="pointer-events-none mr-0.5 rounded-full border border-white/12 bg-[rgba(14,16,24,0.9)] px-2.5 py-1 text-[0.66rem] font-medium tracking-[0.01em] text-white/78 shadow-[0_10px_20px_-16px_black]">
+          Ask AI Coach
+        </span>
       ) : null}
 
-      {/* Floating toggle button stays visible on every page. */}
       <Button
         type="button"
         nativeButton
         size="icon-lg"
-        className="pointer-events-auto rounded-full shadow-lg"
+        className={`pointer-events-auto size-[60px] rounded-full border border-white/18 bg-[linear-gradient(135deg,#7C5CFF_0%,#4F8CFF_100%)] text-white shadow-[0_0_0_1px_rgba(124,92,255,0.16),0_0_24px_-14px_rgba(79,140,255,0.5),0_20px_40px_-18px_rgba(20,26,42,0.68)] transition-[transform,box-shadow] duration-200 ease-out hover:translate-y-0 hover:scale-[1.05] hover:shadow-[0_0_0_1px_rgba(124,92,255,0.22),0_0_28px_-12px_rgba(79,140,255,0.56),0_24px_44px_-18px_rgba(20,26,42,0.72)] ${
+          isOpen ? "ring-2 ring-ring/35 ring-offset-2 ring-offset-background" : ""
+        }`}
         onClick={() => setIsOpen((current) => !current)}
         aria-label={isOpen ? "Close AI assistant" : "Open AI assistant"}
       >
-        {isLoading ? <Loader2 className="size-5 animate-spin" /> : <Bot className="size-5" />}
+        {isLoading ? (
+          <Loader2 className="size-[1.375rem] animate-spin" />
+        ) : isOpen ? (
+          <ChevronsDown className="size-[1.375rem]" />
+        ) : (
+          <AiRobotIcon className="size-[1.9rem] text-white" />
+        )}
       </Button>
     </div>
   );

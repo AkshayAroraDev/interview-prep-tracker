@@ -26,6 +26,11 @@ export const metadata: Metadata = {
   title: "Interview Prep Tracker",
   description:
     "Track interview preparation across technologies, sections, and topics.",
+  applicationName: "Prep Tracker",
+  icons: {
+    icon: "/icon",
+    apple: "/apple-icon",
+  },
 };
 
 const themeInitScript = storageService.getThemeInitScript();
@@ -46,7 +51,9 @@ export default function RootLayout({
           {themeInitScript}
         </Script>
       </head>
-      <body className="h-full overflow-hidden bg-background text-foreground">
+      <body
+        className={`${geistSans.className} h-full overflow-hidden bg-background text-foreground`}
+      >
         <ThemeProvider>
           <AuthProvider>
             <TrackerProvider>

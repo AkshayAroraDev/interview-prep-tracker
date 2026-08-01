@@ -36,27 +36,32 @@ export function StatsOverview() {
         value={stats.total}
         hint="Across all technologies"
         icon={BookOpen}
+        valueClassName="text-[color:var(--primary)]"
+        accentClassName="bg-[color-mix(in_oklch,var(--primary),transparent_90%)] text-[color:var(--primary)] shadow-[0_0_0_1px_color-mix(in_oklch,var(--primary),transparent_82%),0_0_20px_-10px_color-mix(in_oklch,var(--primary),transparent_35%)]"
       />
       <StatCard
         label="Completed"
         value={stats.completed}
         hint={`${stats.percentage}% overall progress`}
         icon={CheckCircle2}
-        accentClassName="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+        valueClassName="text-emerald-500 dark:text-emerald-400"
+        accentClassName="bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 shadow-[0_0_0_1px_color-mix(in_oklch,oklch(0.72_0.16_160),transparent_82%),0_0_20px_-10px_color-mix(in_oklch,oklch(0.72_0.16_160),transparent_35%)]"
       />
       <StatCard
         label="In Progress"
         value={stats.inProgress}
         hint={`${stats.notStarted} not started`}
         icon={TrendingUp}
-        accentClassName="bg-sky-500/10 text-sky-600 dark:text-sky-400"
+        valueClassName="text-sky-500 dark:text-sky-400"
+        accentClassName="bg-sky-500/10 text-sky-500 dark:text-sky-400 shadow-[0_0_0_1px_color-mix(in_oklch,oklch(0.68_0.13_250),transparent_82%),0_0_20px_-10px_color-mix(in_oklch,oklch(0.68_0.13_250),transparent_35%)]"
       />
       <StatCard
         label="Needs Review"
         value={stats.needsReview}
         hint="Topics to revisit"
         icon={RotateCcw}
-        accentClassName="bg-amber-500/10 text-amber-600 dark:text-amber-400"
+        valueClassName="text-amber-500 dark:text-amber-400"
+        accentClassName="bg-amber-500/10 text-amber-500 dark:text-amber-400 shadow-[0_0_0_1px_color-mix(in_oklch,oklch(0.78_0.12_84),transparent_82%),0_0_20px_-10px_color-mix(in_oklch,oklch(0.78_0.12_84),transparent_35%)]"
       />
     </div>
   );
