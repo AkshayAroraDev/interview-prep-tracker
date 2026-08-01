@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 
 import { AppShell } from "@/components/layout/app-shell";
 import { storageService } from "@/lib/storage-service";
@@ -64,6 +65,7 @@ export default function RootLayout({
             </TrackerProvider>
           </AuthProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
