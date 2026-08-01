@@ -64,7 +64,7 @@ export function ProgressCards({ technology }: ProgressCardsProps) {
       return;
     }
 
-    const duration = 550;
+    const duration = 240;
     const start = performance.now();
     const from = { ...previous };
 
@@ -110,12 +110,14 @@ export function ProgressCards({ technology }: ProgressCardsProps) {
         value: animatedStats.total,
         hint: technology ? `In ${technology.name}` : "Across all technologies",
         icon: BookOpen,
+        valueClassName: "text-[color:var(--primary)]",
       },
       {
         label: "Completed",
         value: animatedStats.completed,
         hint: `${animatedStats.percentage}% complete`,
         icon: CheckCircle2,
+        valueClassName: "text-emerald-500 dark:text-emerald-400",
         accentClassName: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
       },
       {
@@ -123,6 +125,7 @@ export function ProgressCards({ technology }: ProgressCardsProps) {
         value: animatedStats.inProgress,
         hint: `${animatedStats.notStarted} not started`,
         icon: TrendingUp,
+        valueClassName: "text-sky-500 dark:text-sky-400",
         accentClassName: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
       },
       {
@@ -130,6 +133,7 @@ export function ProgressCards({ technology }: ProgressCardsProps) {
         value: animatedStats.needsReview,
         hint: "Topics to revisit",
         icon: RotateCcw,
+        valueClassName: "text-amber-500 dark:text-amber-400",
         accentClassName: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
       },
     ],
@@ -151,11 +155,10 @@ export function ProgressCards({ technology }: ProgressCardsProps) {
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
-      {cards.map((card, index) => (
+      {cards.map((card) => (
         <div
           key={card.label}
-          className="animate-in fade-in-0 slide-in-from-bottom-2 duration-300 motion-reduce:animate-none"
-          style={{ animationDelay: `${index * 70}ms` }}
+          className="animate-in fade-in-0 slide-in-from-bottom-2 duration-220 motion-reduce:animate-none"
         >
           <StatCard
             label={card.label}
@@ -163,6 +166,7 @@ export function ProgressCards({ technology }: ProgressCardsProps) {
             hint={card.hint}
             icon={card.icon}
             accentClassName={card.accentClassName}
+            valueClassName={card.valueClassName}
           />
         </div>
       ))}

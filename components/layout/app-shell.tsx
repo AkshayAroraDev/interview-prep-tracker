@@ -24,18 +24,18 @@ export function AppShell({ children }: AppShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex h-screen overflow-hidden bg-[radial-gradient(circle_at_top_left,color-mix(in_oklch,var(--primary),transparent_88%)_0%,transparent_32%),radial-gradient(circle_at_top_right,color-mix(in_oklch,oklch(0.62_0.18_260),transparent_90%)_0%,transparent_28%),linear-gradient(180deg,var(--background)_0%,color-mix(in_oklch,var(--background),black_2%)_100%)] bg-background">
       <Sidebar className="hidden md:flex" />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex h-14 shrink-0 items-center justify-between border-b border-border/80 bg-background px-4 md:px-6">
+        <header className="flex h-14 shrink-0 items-center justify-between border-b border-border/80 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--background),white_3%)_0%,var(--background)_100%)] px-3.5 backdrop-blur-md md:px-6">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger
               render={
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  className="md:hidden"
+                  className="rounded-xl border border-border/60 bg-card/50 text-foreground hover:bg-muted md:hidden"
                   aria-label="Open navigation"
                 />
               }
@@ -52,7 +52,7 @@ export function AppShell({ children }: AppShellProps) {
 
           <div className="hidden md:block" />
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2.5">
             <SyncStatusBadge className="hidden sm:inline-flex" />
             <AuthControls />
             <ThemeToggle />
@@ -60,7 +60,9 @@ export function AppShell({ children }: AppShellProps) {
         </header>
 
         <main className="flex-1 overflow-y-auto">
-          <div className="animate-in fade-in px-0 duration-200">{children}</div>
+          <div className="animate-in fade-in-0 slide-in-from-bottom-1 px-0 duration-300 motion-reduce:animate-none">
+            {children}
+          </div>
         </main>
       </div>
     </div>

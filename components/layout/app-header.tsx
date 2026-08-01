@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { GraduationCap } from "lucide-react";
 
+import { BrandMark } from "@/components/layout/brand-mark";
 import { cn } from "@/lib/utils";
 
 interface AppHeaderProps {
@@ -38,7 +38,7 @@ export function AppHeader({
             </Link>
           ) : (
             <div className="flex items-center gap-2 text-fluid-helper font-medium text-primary">
-              <GraduationCap className="size-4" />
+              <BrandMark size={28} iconSize={14} />
               <span>Study smarter, interview better</span>
             </div>
           )}

@@ -89,7 +89,12 @@ export function AuthControls({ className }: { className?: string }) {
   if (isLoading) {
     return (
       <div className={cn("flex items-center gap-2", className)}>
-        <Button variant="outline" size="sm" disabled>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled
+          className="rounded-xl border-border/70 bg-card/70"
+        >
           <Loader2 className="size-4 animate-spin" />
           Loading...
         </Button>
@@ -100,7 +105,12 @@ export function AuthControls({ className }: { className?: string }) {
   if (!user) {
     return (
       <div className={cn("flex items-center gap-2", className)}>
-        <Button variant="outline" size="sm" onClick={() => void signInWithGoogle()}>
+        <Button
+          variant="outline"
+          size="sm"
+          className="rounded-xl border-border/70 bg-card/70 hover:bg-muted/70"
+          onClick={() => void signInWithGoogle()}
+        >
           <LogIn className="size-4" />
           Login with Google
         </Button>
@@ -109,9 +119,9 @@ export function AuthControls({ className }: { className?: string }) {
   }
 
   return (
-    <div className={cn("flex items-center gap-2", className)}>
-      <div className="flex items-center gap-2 rounded-lg border border-border/70 bg-card px-2 py-1">
-        <div className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted text-fluid-helper font-semibold text-foreground">
+    <div className={cn("flex items-center gap-1.5 sm:gap-2", className)}>
+      <div className="flex items-center gap-2 rounded-xl border border-[color-mix(in_oklch,var(--primary),transparent_78%)] bg-[linear-gradient(180deg,color-mix(in_oklch,var(--card),white_2%)_0%,var(--card)_100%)] px-2 py-1 shadow-[0_0_0_1px_color-mix(in_oklch,var(--primary),transparent_86%),0_14px_28px_-24px_color-mix(in_oklch,var(--primary),transparent_18%)] sm:gap-2.5 sm:px-2.5 backdrop-blur-md">
+        <div className="relative flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-border/60 bg-muted text-fluid-helper font-semibold text-foreground">
           <span
             className={cn(
               "absolute inset-0 flex items-center justify-center transition-opacity duration-150",
@@ -139,13 +149,20 @@ export function AuthControls({ className }: { className?: string }) {
             />
           ) : null}
         </div>
-        <div className="hidden max-w-[180px] sm:block">
-          <p className="truncate text-fluid-label font-medium leading-none">{displayName ?? "Signed in user"}</p>
-          <p className="truncate text-fluid-helper text-muted-foreground">{email ?? "No email available"}</p>
+        <div className="hidden max-w-[170px] sm:block md:max-w-[190px]">
+          <p className="truncate text-fluid-label font-semibold leading-none text-foreground/95">
+            {displayName ?? "Signed in user"}
+          </p>
+          <p className="truncate text-fluid-helper text-muted-foreground/90">{email ?? "No email available"}</p>
         </div>
       </div>
 
-      <Button variant="outline" size="sm" onClick={() => void signOut()}>
+      <Button
+        variant="outline"
+        size="sm"
+        className="rounded-xl border-border/70 bg-[linear-gradient(180deg,color-mix(in_oklch,var(--card),white_2%)_0%,var(--card)_100%)] shadow-[0_0_0_1px_color-mix(in_oklch,var(--primary),transparent_88%),0_10px_20px_-22px_color-mix(in_oklch,var(--primary),transparent_18%)] hover:bg-muted/75"
+        onClick={() => void signOut()}
+      >
         <LogOut className="size-4" />
         Logout
       </Button>
