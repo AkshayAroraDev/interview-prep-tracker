@@ -2,7 +2,6 @@
 
 import {
   Bot,
-  ChevronsDown,
   Loader2,
   Maximize2,
   MessageSquareText,
@@ -14,7 +13,7 @@ import {
 import { ChangeEvent, FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
-import { AiRobotIcon } from "@/components/ai/ai-robot-icon";
+import { AiBot } from "@/components/ai/ai-bot";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -405,30 +404,22 @@ export function AiAssistant() {
         </CardContent>
       </Card>
 
-      {!isOpen ? (
-        <span className="pointer-events-none mr-0.5 rounded-full border border-white/12 bg-[rgba(14,16,24,0.9)] px-2.5 py-1 text-[0.66rem] font-medium tracking-[0.01em] text-white/78 shadow-[0_10px_20px_-16px_black]">
-          Ask AI Coach
-        </span>
-      ) : null}
+      <div className="relative pointer-events-auto">
+        {!isOpen ? (
+          <span className="pointer-events-none absolute right-[44px] bottom-[108px] rounded-full border border-white/12 bg-[rgba(14,16,24,0.9)] px-2.5 py-1 text-[0.66rem] font-medium tracking-[0.01em] whitespace-nowrap text-white/78 shadow-[0_10px_20px_-16px_black]">
+            Hello, how may I help you?
+          </span>
+        ) : null}
 
-      <Button
-        type="button"
-        nativeButton
-        size="icon-lg"
-        className={`pointer-events-auto size-[60px] rounded-full border border-white/18 bg-[linear-gradient(135deg,#7C5CFF_0%,#4F8CFF_100%)] text-white shadow-[0_0_0_1px_rgba(124,92,255,0.16),0_0_24px_-14px_rgba(79,140,255,0.5),0_20px_40px_-18px_rgba(20,26,42,0.68)] transition-[transform,box-shadow] duration-200 ease-out hover:translate-y-0 hover:scale-[1.05] hover:shadow-[0_0_0_1px_rgba(124,92,255,0.22),0_0_28px_-12px_rgba(79,140,255,0.56),0_24px_44px_-18px_rgba(20,26,42,0.72)] ${
-          isOpen ? "ring-2 ring-ring/35 ring-offset-2 ring-offset-background" : ""
-        }`}
-        onClick={() => setIsOpen((current) => !current)}
-        aria-label={isOpen ? "Close AI assistant" : "Open AI assistant"}
-      >
-        {isLoading ? (
-          <Loader2 className="size-[1.375rem] animate-spin" />
-        ) : isOpen ? (
-          <ChevronsDown className="size-[1.375rem]" />
-        ) : (
-          <AiRobotIcon className="size-[1.9rem] text-white" />
-        )}
-      </Button>
+        <button
+          type="button"
+          className="size-[120px] cursor-pointer bg-transparent p-0 text-inherit transition-transform duration-200 ease-out hover:scale-[1.2]"
+          onClick={() => setIsOpen((current) => !current)}
+          aria-label={isOpen ? "Close AI assistant" : "Open AI assistant"}
+        >
+          <AiBot className="size-[112px]" />
+        </button>
+      </div>
     </div>
   );
 }

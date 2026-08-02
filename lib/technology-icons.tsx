@@ -59,11 +59,9 @@ export const TECHNOLOGY_ICON_REGISTRY = {
     lucideIcon: Activity,
   },
   html: {
-    svgPath: "/technology-images/html.svg",
     lucideIcon: FileText,
   },
   css: {
-    svgPath: "/technology-images/css.svg",
     lucideIcon: Palette,
   },
   browser: {
@@ -98,7 +96,6 @@ export const TECHNOLOGY_ICON_REGISTRY = {
     lucideIcon: Server,
   },
   testing: {
-    svgPath: "/technology-images/testing.svg",
     lucideIcon: TestTube2,
   },
   graphql: {
