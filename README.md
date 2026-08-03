@@ -1,23 +1,34 @@
 # Interview Prep Tracker
 
-A modern, frontend-only interview preparation tracker built with Next.js, TypeScript, Tailwind CSS, and shadcn/ui. All data persists in the browser via LocalStorage.
+An AI-powered interview preparation platform built with Next.js, React, TypeScript, Supabase, and Google Gemini. Track learning progress, organize study plans, and interact with an AI coach for personalized interview guidance.
 
 ## Features
 
-- Dashboard with overall progress stats
-- Technologies organized into sections and topics
-- Topic status tracking (`not_started`, `in_progress`, `completed`, `needs_review`)
-- Priority levels and notes/resources per topic
-- Full CRUD for technologies, sections, and topics
-- Seed demo data on first load
+- AI-powered interview coach using Google Gemini
+- Technology, section, and topic management
+- Progress tracking with completion analytics
+- Google OAuth authentication
+- Cloud persistence with Supabase
+- Responsive dashboard built with modern UI components
 
 ## Tech Stack
 
-- Next.js (App Router)
+### Frontend
+- Next.js 15
+- React 19
 - TypeScript
 - Tailwind CSS v4
-- shadcn/ui
-- LocalStorage persistence
+- Base UI / shadcn/ui
+
+### Backend
+- Next.js API Routes
+
+### Database & Auth
+- Supabase
+- Google OAuth
+
+### AI
+- Google Gemini
 
 ## Getting Started
 
@@ -26,36 +37,23 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open http://localhost:3000
 
 ## Project Structure
 
-```
-app/              # App Router pages
+```text
+app/              # App Router pages & API routes
 components/       # Reusable UI components
-  dashboard/
-  layout/
-  providers/
-  section/
-  shared/
-  technology/
-  topic/
-  ui/             # shadcn/ui primitives
-data/             # Seed data
 hooks/            # Custom React hooks
-lib/              # Storage, progress, constants, central topic catalog
-types/            # TypeScript interfaces
+lib/              # Utilities and business logic
+types/            # TypeScript types
 ```
-
-## Data Model
-
-- **Technology** — top-level stack or domain (e.g. React, System Design)
-- **Section** — grouped study area within a technology
-- **Topic** — individual item with status, priority, notes, and resources
 
 ## Scripts
 
-- `npm run dev` — start development server
-- `npm run build` — production build
-- `npm run start` — start production server
-- `npm run lint` — run ESLint
+```bash
+npm run dev      # Development server
+npm run build    # Production build
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
